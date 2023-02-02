@@ -25,7 +25,7 @@ export const DataTableUnidad = () => {
     ]);
     const [columns] = useState([
         { name: 'nombreUnidad', title: 'NOMBRE UNIDAD' },
-        { name: 'acciones', title: 'ACCIONES' },
+        { name: 'id', title: 'ACCIONES' },
     ]);
     const [rows, setRows] = useState<IUnidad[]>([]);
     const [loading, setLoading] = useState(false);
@@ -80,7 +80,7 @@ export const DataTableUnidad = () => {
         console.log(value);
         return (
             <>
-                <Button sx={{ mr: 1 }} variant="contained" component={Link} to="/colaborador/crear">Editar</Button>
+                <Button sx={{ mr: 1 }} variant="contained" component={Link} to="/colaborador/crear">Editar {value}</Button>
                 <Button variant="outlined" color="error">
                     Eliminar
                 </Button>
@@ -88,7 +88,7 @@ export const DataTableUnidad = () => {
         )
     };
     const [dateColumns] = useState(['saleDate']);
-    const [currencyColumns] = useState(['acciones']);
+    const [currencyColumns] = useState(['id']);
     const CurrencyTypeProvider = (props: any) => (
         <DataTypeProvider
             formatterComponent={CurrencyFormatter}

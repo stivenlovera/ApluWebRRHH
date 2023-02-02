@@ -16,16 +16,16 @@ export interface AxiosResponseProps {
     status: number;
     statusText: string;
 }
-export const AxiosResponse = (response: AxiosResponseProps) => {
-    if (response.status == 200) {
-        console.log(response)
-    }
-    else {
-        return false;
-    }
-    return response.status;
+export const AxiosResponse = () => {
+    AXIOS.interceptors.response.use(
+        async (config) => {
+            //console.log(config.headers.authorization);
+            asyncLocalStorage.setItem('token',config.headers.authorization)
+            return config;
+        }
+    );
 }
-//${}
+
 export const AxiosRequest = async () => {
     AXIOS.interceptors.request.use(
         async (config) => {

@@ -21,10 +21,10 @@ const DataGrid = () => {
         { columnName: 'ci' },
         { columnName: 'codColaborador' },
         { columnName: 'nombreCompleto', width: 250 },
-        { columnName: 'cargo'},
-        { columnName: 'sucursal'},
-        { columnName: 'oficina'},
-        { columnName: 'acciones', width: 250 },
+        { columnName: 'cargo' },
+        { columnName: 'sucursal' },
+        { columnName: 'oficina' },
+        { columnName: 'id', width: 250 },
     ]);
     const [columns] = useState([
         { name: 'ci', title: 'CI' },
@@ -33,7 +33,7 @@ const DataGrid = () => {
         { name: 'cargo', title: 'CARGO' },
         { name: 'sucursal', title: 'SUCURSAL' },
         { name: 'oficina', title: 'OFICINA' },
-        { name: 'acciones', title: 'ACCIONES' },
+        { name: 'id', title: 'ACCIONES' },
     ]);
     const [rows, setRows] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -88,7 +88,7 @@ const DataGrid = () => {
         console.log(value);
         return (
             <>
-                <Button sx={{ mr: 1 }} variant="contained" component={Link} to="/colaborador/crear">Editar</Button>
+                <Button sx={{ mr: 1 }} variant="contained" component={Link} to={`/colaborador/editar/${value}`}>Editar</Button>
                 <Button variant="outlined" color="error">
                     Eliminar
                 </Button>
@@ -96,7 +96,7 @@ const DataGrid = () => {
         )
     };
     const [dateColumns] = useState(['saleDate']);
-    const [currencyColumns] = useState(['acciones']);
+    const [currencyColumns] = useState(['id']);
     const CurrencyTypeProvider = (props: any) => (
         <DataTypeProvider
             formatterComponent={CurrencyFormatter}

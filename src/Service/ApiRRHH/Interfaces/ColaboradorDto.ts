@@ -17,7 +17,6 @@ import { CajaSalud } from "./CajaSaludDto";
 import { FormacionPrincipal } from "./FomacionPrincipal";
 import { Pais } from "./PaisDto";
 import { Sexo } from "./SexoDto";
-import { Dayjs } from "dayjs";
 
 export interface ResponseCreateColaborador {
     status: number,
@@ -53,7 +52,7 @@ export interface CreateColaborador {
     apellidoPaterno: string;
     apellidoMaterno: string;
     apellidoCasado: string;
-    fechaNacimiento: Dayjs;
+    fechaNacimiento: Date;
     tipoDocumento: TipoDocumento[];
     departamento: Departamento[];
     pais: Pais[];
@@ -83,9 +82,9 @@ export interface StoreColaborador {
     apellidoPaterno: string,
     apellidoMaterno: string,
     apellidoCasado: string,
-    fechaNacimiento: Dayjs,
-    vencimientoDocumento: Dayjs,
-    vencimientoLicConducir: Dayjs,
+    fechaNacimiento: Date,
+    vencimientoDocumento: Date,
+    vencimientoLicConducir: Date,
     lugarNacimiento: string;
     licenciaConducir: string;
     telefonoFijo: string;
@@ -103,12 +102,12 @@ export interface StoreColaborador {
     estadoCivil: string;
     conyugeNombreCompleto:string;
     conyugeLugarNacimiento:string;
-    conyugeFechaNacimiento: Dayjs,
+    conyugeFechaNacimiento: Date,
     codigoColaborador:string;
-    fechaIngreso:Dayjs;
-    fechaIngresoVacaciones:Dayjs;
-    fechaIngresoVacacionesAnt:Dayjs;
-    fechaIngresoBonoAntiguedad:Dayjs;
+    fechaIngreso:Date;
+    fechaIngresoVacaciones:Date;
+    fechaIngresoVacacionesAnt:Date;
+    fechaIngresoBonoAntiguedad:Date;
     oficina:string;
     ModohaberBasico:string;
     haberBasico:string;
@@ -119,8 +118,8 @@ export interface StoreColaborador {
     dirrecionLaboral:string;
     emailLaboral:string;
     motivoContrato:string;
-    fechaFinalizacion:Dayjs;
-    fechaRatificacion:Dayjs;
+    fechaFinalizacion:Date;
+    fechaRatificacion:Date;
     excliblePlanilla:string;
     aguinaldoMes1:string;
     aplica2aguinaldo:string;

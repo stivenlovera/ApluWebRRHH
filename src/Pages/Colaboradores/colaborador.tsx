@@ -34,8 +34,12 @@ import { TipoCuenta } from '../../Service/ApiRRHH/Interfaces/TipoCuenta';
 import { CajaSalud } from '../../Service/ApiRRHH/Interfaces/CajaSaludDto';
 import { FormaPago } from '../../Service/ApiRRHH/Interfaces/FormaPago';
 import { Sexo } from '../../Service/ApiRRHH/Interfaces/SexoDto';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { date } from "yup/lib/locale";
 
+interface ColaboradorProps {
+    tipo: string
+}
 const InitialState: StoreColaborador = {
     ci: "",
     nombre1: "",
@@ -44,9 +48,9 @@ const InitialState: StoreColaborador = {
     apellidoPaterno: "",
     apellidoMaterno: "",
     apellidoCasado: "",
-    fechaNacimiento: dayjs(),
-    vencimientoDocumento: dayjs(),
-    vencimientoLicConducir: dayjs(),
+    fechaNacimiento:  new Date(),
+    vencimientoDocumento: new Date(),
+    vencimientoLicConducir:  new Date(),
     lugarNacimiento: "",
     licenciaConducir: "",
     telefonoFijo: "",
@@ -64,12 +68,12 @@ const InitialState: StoreColaborador = {
     estadoCivil: "",
     conyugeNombreCompleto: "",
     conyugeLugarNacimiento: "",
-    conyugeFechaNacimiento: dayjs(),
+    conyugeFechaNacimiento:  new Date(),
     codigoColaborador: "",
-    fechaIngreso: dayjs(),
-    fechaIngresoVacaciones: dayjs(),
-    fechaIngresoVacacionesAnt: dayjs(),
-    fechaIngresoBonoAntiguedad: dayjs(),
+    fechaIngreso:  new Date(),
+    fechaIngresoVacaciones:  new Date(),
+    fechaIngresoVacacionesAnt:  new Date(),
+    fechaIngresoBonoAntiguedad:  new Date(),
     oficina: "",
     ModohaberBasico: "",
     haberBasico: "",
@@ -80,8 +84,8 @@ const InitialState: StoreColaborador = {
     dirrecionLaboral: "",
     emailLaboral: "",
     motivoContrato: "",
-    fechaFinalizacion: dayjs(),
-    fechaRatificacion: dayjs(),
+    fechaFinalizacion:  new Date(),
+    fechaRatificacion:  new Date(),
     excliblePlanilla: "",
     aguinaldoMes1: "",
     aplica2aguinaldo: "",
@@ -134,9 +138,10 @@ const InitialState: StoreColaborador = {
     formacionPrincial: "",
     sexo: "",
 }
-const Colaborador = () => {
+const Colaborador = ({ tipo }: ColaboradorProps) => {
+    let { id } = useParams();
     const navigate = useNavigate();
-    const { isValid, values, handleSubmit, handleBlur, handleChange, errors } = useFormik({
+    const { isValid, values, handleSubmit, handleBlur, handleChange, errors, setFieldValue } = useFormik({
         initialValues: InitialState,
         onSubmit: async (value) => {
 
@@ -148,7 +153,7 @@ const Colaborador = () => {
 
     });
 
-    console.log('load component')
+
     const [value, setValue] = useState<Dayjs | null>(null);
     const [open, setloader] = useState(false);
 
@@ -198,12 +203,39 @@ const Colaborador = () => {
             console.log('error')
         }
     }
+    const EditartColaborador = async () => {
+        let { id } = useParams();
+        console.log('TIPO', tipo, 'PARAMS', id)
+        try {
+            const { data } = await CreateColaboradorService();
+            setTipoDocumento(data.data.tipoDocumento)
+            setPais(data.data.pais)
+            setDepartamento(data.data.departamento)
+            setEstadoCivil(data.data.estadoCivil)
+            setUnidad(data.data.unidad)
+            setSucursal(data.data.sucursal)
+            setCargo(data.data.cargo)
+            setClasificacionlaboral(data.data.clasificacionlaboral)
+            setModalidadContrato(data.data.modalidadContrato)
+            setInformacionContable(data.data.informacionContable);
+            setCentroCosto(data.data.centroCosto);
+            setTipoContrato(data.data.tipoContrato);
+            setFormacionPrincial(data.data.formacionPrincial);
+            settipoCuenta(data.data.tipoCuenta);
+            setBanco(data.data.banco);
+            setAdministracionPensiones(data.data.administracionPensiones);
+            setCajaSalud(data.data.cajaSalud);
+            setFormaPago(data.data.formaPago);
+            setSexo(data.data.sexo);
+        } catch (error) {
+            console.log('error')
+        }
+    }
     const StoreColaborador = async () => {
         try {
             const { data } = await StoreColaboradorService(values);
-            navigate('/colaboradores');
-            if (data.status==1) {
-               
+            if (data.status == 1) {
+                //navigate('/colaboradores');
             }
         } catch (error) {
             console.log('error')
@@ -211,17 +243,24 @@ const Colaborador = () => {
     }
 
     const onSave = () => {
+        console.log(values)
         if (isValid) {
+            //console.log(values)
             StoreColaborador();
         }
     }
 
 
     useEffect(() => {
+        if (tipo == 'editar') {
+
+            console.log('TIPO', tipo, 'PARAMS', id)
+        } else {
+
+        }
         CreateColaborador();
         setloader(false);
         return () => {
-
         }
     }, [])
 
@@ -305,7 +344,9 @@ const Colaborador = () => {
                                         <DatePicker
                                             label="Venc. Documento"
                                             value={values.vencimientoDocumento}
-                                            onChange={handleChange}
+                                            onChange={(value) => setFieldValue("vencimientoDocumento", value, true)}
+                                            toolbarFormat="DD/MM/YYYY"
+                                            inputFormat="DD/MM/YYYY"
                                             renderInput={(params) => <TextField {...params} fullWidth />}
                                         />
                                     </LocalizationProvider>
@@ -424,7 +465,9 @@ const Colaborador = () => {
                                         <DatePicker
                                             label="Fecha Nacimiento"
                                             value={values.fechaNacimiento}
-                                            onChange={handleChange}
+                                            onChange={(value) => setFieldValue("fechaNacimiento", value, true)}
+                                            toolbarFormat="DD/MM/YYYY"
+                                            inputFormat="DD/MM/YYYY"
                                             renderInput={(params) => <TextField {...params} fullWidth />}
                                         />
                                     </LocalizationProvider>
@@ -450,12 +493,11 @@ const Colaborador = () => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
-
+                                            name="sexo"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="M" onChange={handleChange} control={<Radio />} label="Masculino" />
-                                            <FormControlLabel value="F" onChange={handleChange} control={<Radio />} label="Femenino" />
-
+                                            <FormControlLabel value="1" control={<Radio />} label="Masculino" />
+                                            <FormControlLabel value="2" control={<Radio />} label="Femenino" />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
@@ -465,9 +507,10 @@ const Colaborador = () => {
                                         <Select
                                             labelId="demo-simple-select-standard-label"
                                             id="demo-simple-select-standard"
+                                            name="estadoCivil"
                                             value={values.estadoCivil}
                                             onChange={handleChange}
-                                            label="Tipo Documento"
+                                            label="Estado Civil"
                                         >
                                             {
                                                 estadoCivil.map((estadoCivil, i) => {
@@ -496,10 +539,10 @@ const Colaborador = () => {
                                     <LocalizationProvider dateAdapter={AdapterDayjs} >
                                         <DatePicker
                                             label="Venc. Licencia Conducir"
-                                            value={value}
-                                            onChange={(newValue) => {
-                                                setValue(newValue);
-                                            }}
+                                            value={values.vencimientoLicConducir}
+                                            onChange={(value) => setFieldValue("vencimientoLicConducir", value, true)}
+                                            toolbarFormat="DD/MM/YYYY"
+                                            inputFormat="DD/MM/YYYY"
                                             renderInput={(params) => <TextField {...params} fullWidth />}
                                         />
                                     </LocalizationProvider>
@@ -595,7 +638,7 @@ const Colaborador = () => {
                                 </Grid>
                                 <Grid item xs={12} sm={4}>
                                     <FormControl fullWidth>
-                                        <FormLabel id="demo-row-radio-buttons-group-label">Vehiculo Propia</FormLabel>
+                                        <FormLabel id="demo-row-radio-buttons-group-label">Vehiculo Propio</FormLabel>
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
@@ -714,9 +757,11 @@ const Colaborador = () => {
                                 <Grid item xs={12} sm={4}>
                                     <LocalizationProvider dateAdapter={AdapterDayjs} >
                                         <DatePicker
-                                            label="Fecha Nacimiento"
+                                            label="Fecha Nacimiento Conyuge"
                                             value={values.conyugeFechaNacimiento}
-                                            onChange={handleChange}
+                                            onChange={(value) => setFieldValue("conyugeFechaNacimiento", value, true)}
+                                            toolbarFormat="DD/MM/YYYY"
+                                            inputFormat="DD/MM/YYYY"
                                             renderInput={(params) => <TextField {...params} fullWidth />}
                                         />
                                     </LocalizationProvider>
@@ -749,7 +794,9 @@ const Colaborador = () => {
                                         <DatePicker
                                             label="Fecha Ingreso"
                                             value={values.fechaIngreso}
-                                            onChange={handleChange}
+                                            onChange={(value) => setFieldValue("fechaIngreso", value, true)}
+                                            toolbarFormat="DD/MM/YYYY"
+                                            inputFormat="DD/MM/YYYY"
                                             renderInput={(params) => <TextField {...params} fullWidth />}
                                         />
                                     </LocalizationProvider>
@@ -759,7 +806,9 @@ const Colaborador = () => {
                                         <DatePicker
                                             label="Fecha Ingreso Vacaciones"
                                             value={values.fechaIngresoVacaciones}
-                                            onChange={handleChange}
+                                            onChange={(value) => setFieldValue("fechaIngresoVacaciones", value, true)}
+                                            toolbarFormat="DD/MM/YYYY"
+                                            inputFormat="DD/MM/YYYY"
                                             renderInput={(params) => <TextField {...params} fullWidth />}
                                         />
                                     </LocalizationProvider>
@@ -769,7 +818,9 @@ const Colaborador = () => {
                                         <DatePicker
                                             label="Fecha Ingreso Antiguedad Vacaciones"
                                             value={values.fechaIngresoVacacionesAnt}
-                                            onChange={handleChange}
+                                            onChange={(value) => setFieldValue("fechaIngresoVacacionesAnt", value, true)}
+                                            toolbarFormat="DD/MM/YYYY"
+                                            inputFormat="DD/MM/YYYY"
                                             renderInput={(params) => <TextField {...params} fullWidth />}
                                         />
                                     </LocalizationProvider>
@@ -779,7 +830,9 @@ const Colaborador = () => {
                                         <DatePicker
                                             label="Fecha Ingreso Bono Antiguedad"
                                             value={values.fechaIngresoBonoAntiguedad}
-                                            onChange={handleChange}
+                                            onChange={(value) => setFieldValue("fechaIngresoBonoAntiguedad", value, true)}
+                                            toolbarFormat="DD/MM/YYYY"
+                                            inputFormat="DD/MM/YYYY"
                                             renderInput={(params) => <TextField {...params} fullWidth />}
                                         />
                                     </LocalizationProvider>
@@ -1044,10 +1097,10 @@ const Colaborador = () => {
                                     <LocalizationProvider dateAdapter={AdapterDayjs} >
                                         <DatePicker
                                             label="Fecha Finalizacion"
-                                            value={value}
-                                            onChange={(newValue) => {
-                                                setValue(newValue);
-                                            }}
+                                            value={values.fechaFinalizacion}
+                                            onChange={(value) => setFieldValue("fechaFinalizacion", value, true)}
+                                            toolbarFormat="DD/MM/YYYY"
+                                            inputFormat="DD/MM/YYYY"
                                             renderInput={(params) => <TextField {...params} fullWidth />}
                                         />
                                     </LocalizationProvider>
@@ -1056,10 +1109,10 @@ const Colaborador = () => {
                                     <LocalizationProvider dateAdapter={AdapterDayjs} >
                                         <DatePicker
                                             label="Fecha Ratificacion"
-                                            value={value}
-                                            onChange={(newValue) => {
-                                                setValue(newValue);
-                                            }}
+                                            value={values.fechaRatificacion}
+                                            onChange={(value) => setFieldValue("fechaRatificacion", value, true)}
+                                            toolbarFormat="DD/MM/YYYY"
+                                            inputFormat="DD/MM/YYYY"
                                             renderInput={(params) => <TextField {...params} fullWidth />}
                                         />
                                     </LocalizationProvider>

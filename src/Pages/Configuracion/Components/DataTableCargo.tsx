@@ -77,7 +77,7 @@ export const DataTableCargo = () => {
         console.log(value);
         return (
             <>
-                <Button sx={{ mr: 1 }} variant="contained" component={Link} to="/colaborador/crear">Editar</Button>
+                <Button sx={{ mr: 1 }} variant="contained" component={Link} to="/colaborador/crear">Editar {value}</Button>
                 <Button variant="outlined" color="error">
                     Eliminar
                 </Button>

@@ -13,4 +13,14 @@ export async function CreateColaboradorService() {
 export async function StoreColaboradorService(storeColaborador:StoreColaborador) {
     return await axios.post<ResponseStoreColaborador>(`${process.env.REACT_APP_API_RRHH}/colaborador/store`,storeColaborador);
 }
+export async function EditColaboradorService(storeColaborador:StoreColaborador) {
+    return await axios.post<ResponseStoreColaborador>(`${process.env.REACT_APP_API_RRHH}/colaborador/store`,storeColaborador);
+}
+export async function UpdateColaboradorService(storeColaborador:StoreColaborador) {
+    return await axios.post<ResponseStoreColaborador>(`${process.env.REACT_APP_API_RRHH}/colaborador/store`,storeColaborador);
+}
+export async function DeleteColaboradorService(storeColaborador:StoreColaborador) {
+    return await axios.post<ResponseStoreColaborador>(`${process.env.REACT_APP_API_RRHH}/colaborador/store`,storeColaborador);
+}
+
 
