@@ -1,6 +1,6 @@
 import { ThemeProvider } from "@emotion/react";
 
-import { Backdrop, Button, Card, CardActions, CardContent, Checkbox, CircularProgress, CssBaseline, FormControl, FormControlLabel, FormLabel, Grid, InputLabel, MenuItem, Radio, RadioGroup, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
+import { Backdrop, Button, Card, CardActions, CardContent, Checkbox, CircularProgress, CssBaseline, FormControl, FormControlLabel, FormHelperText, FormLabel, Grid, InputLabel, MenuItem, Radio, RadioGroup, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { SideBar } from '../../Components/Sidebar/sidebar';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -35,7 +35,6 @@ import { CajaSalud } from '../../Service/ApiRRHH/Interfaces/CajaSaludDto';
 import { FormaPago } from '../../Service/ApiRRHH/Interfaces/FormaPago';
 import { Sexo } from '../../Service/ApiRRHH/Interfaces/SexoDto';
 import { useNavigate, useParams } from "react-router-dom";
-import { date } from "yup/lib/locale";
 
 interface ColaboradorProps {
     tipo: string
@@ -48,9 +47,9 @@ const InitialState: StoreColaborador = {
     apellidoPaterno: "",
     apellidoMaterno: "",
     apellidoCasado: "",
-    fechaNacimiento:  new Date(),
+    fechaNacimiento: new Date(),
     vencimientoDocumento: new Date(),
-    vencimientoLicConducir:  new Date(),
+    vencimientoLicConducir: new Date(),
     lugarNacimiento: "",
     licenciaConducir: "",
     telefonoFijo: "",
@@ -58,6 +57,8 @@ const InitialState: StoreColaborador = {
     telefonoFijoTrabajo: "",
     ContactoEmegencia: "",
     TelefonoEmergencia: "",
+    vehiculoPropio: "",
+    viviendaPropia: "",
     TipoSangre: "",
     FactorSangre: "",
     Dirrecion: "",
@@ -68,12 +69,12 @@ const InitialState: StoreColaborador = {
     estadoCivil: "",
     conyugeNombreCompleto: "",
     conyugeLugarNacimiento: "",
-    conyugeFechaNacimiento:  new Date(),
+    conyugeFechaNacimiento: new Date(),
     codigoColaborador: "",
-    fechaIngreso:  new Date(),
-    fechaIngresoVacaciones:  new Date(),
-    fechaIngresoVacacionesAnt:  new Date(),
-    fechaIngresoBonoAntiguedad:  new Date(),
+    fechaIngreso: new Date(),
+    fechaIngresoVacaciones: new Date(),
+    fechaIngresoVacacionesAnt: new Date(),
+    fechaIngresoBonoAntiguedad: new Date(),
     oficina: "",
     ModohaberBasico: "",
     haberBasico: "",
@@ -84,14 +85,15 @@ const InitialState: StoreColaborador = {
     dirrecionLaboral: "",
     emailLaboral: "",
     motivoContrato: "",
-    fechaFinalizacion:  new Date(),
-    fechaRatificacion:  new Date(),
+    fechaFinalizacion: new Date(),
+    fechaRatificacion: new Date(),
     excliblePlanilla: "",
     aguinaldoMes1: "",
     aplica2aguinaldo: "",
     aplicaRetroactivos: "",
     aplicaPrima: "",
     enviarBoletaPago: "",
+    indemnizacionQuinquenios: "",
     indemnizacion: "",
     porcentajeCentroCosto: "",
     cuentaBancaria: "",
@@ -141,15 +143,113 @@ const InitialState: StoreColaborador = {
 const Colaborador = ({ tipo }: ColaboradorProps) => {
     let { id } = useParams();
     const navigate = useNavigate();
-    const { isValid, values, handleSubmit, handleBlur, handleChange, errors, setFieldValue } = useFormik({
+    const { isValid, values, handleSubmit, handleBlur, handleChange, errors, setFieldValue, setFieldTouched, validateForm, setTouched } = useFormik({
         initialValues: InitialState,
         onSubmit: async (value) => {
 
         },
         validationSchema: Yup.object({
-            ci: ValidateCI()
+            ci: ValidateCI(),
+            nombre1: Yup.string().required('Es requerido'),
+            nombre2: Yup.string().required('Es requerido'),
+            nombre3: Yup.string().nullable(),
+            apellidoPaterno: Yup.string().required('Es requerido'),
+            apellidoMaterno: Yup.string().required('Es requerido'),
+            apellidoCasado: Yup.string().nullable(),
+            fechaNacimiento: Yup.date().required('Es requerido'),
+            vencimientoDocumento: Yup.string().required('Es requerido'),
+            vencimientoLicConducir: Yup.string().nullable(),
+            lugarNacimiento: Yup.string().required('Es requerido'),
+            licenciaConducir: Yup.string().nullable(),
+            telefonoFijo: Yup.string().nullable(),
+            Celular: Yup.string().nullable(),
+            telefonoFijoTrabajo: Yup.string().nullable(),
+            ContactoEmegencia: Yup.string().required('Es requerido'),
+            TelefonoEmergencia: Yup.string().required('Es requerido'),
+            vehiculoPropio: Yup.string().required('Marque una opcion'),
+            viviendaPropia: Yup.string().required('Marque una opcion'),
+            TipoSangre: Yup.string().required('Es requerido'),
+            FactorSangre: Yup.string().required('Es requerido'),
+            Dirrecion: Yup.string().required('Es requerido'),
+            Email: Yup.string().required('Es requerido').email('Debe ser un email'),
+            tipoDocumento: Yup.string().required('Debe selecionar almenos una opcion'),
+            nacionalidad: Yup.string().required('Debe selecionar almenos una opcion'),
+            departamento: Yup.string().required('Debe selecionar almenos una opcion'),
+            estadoCivil: Yup.string().required('Debe selecionar almenos una opcion'),
+            conyugeNombreCompleto: Yup.string().nullable(),
+            conyugeLugarNacimiento: Yup.string().nullable(),
+            conyugeFechaNacimiento: Yup.string().nullable(),
+            codigoColaborador: Yup.string().nullable(),
+            fechaIngreso: Yup.date().required('Es requerido'),
+            fechaIngresoVacaciones: Yup.date().required('Es requerido'),
+            fechaIngresoVacacionesAnt: Yup.date().required('Es requerido'),
+            fechaIngresoBonoAntiguedad: Yup.date().required('Es requerido'),
+            oficina: Yup.string().required('Es requerido'),
+            ModohaberBasico: Yup.string().required('Marque una opcion'),
+            haberBasico: Yup.string().required('Es requerido'),
+            ModoQuincena: Yup.string().required('Marque una opcion'),
+            HaberQuincena: Yup.string().required('Es requerido'),
+            telefonoLaboral: Yup.string().required('Es requerido'),
+            celularLaboral: Yup.string().required('Es requerido'),
+            dirrecionLaboral: Yup.string().required('Es requerido'),
+            emailLaboral: Yup.string().required('Es requerido'),
+            motivoContrato: Yup.string().required('Es requerido'),
+            fechaFinalizacion: Yup.date().required('Es requerido'),
+            fechaRatificacion: Yup.date().required('Es requerido'),
+            excliblePlanilla: Yup.string().required('Marque una opcion'),
+            aguinaldoMes1: Yup.string().required('Marque una opcion'),
+            aplica2aguinaldo: Yup.string().required('Marque una opcion'),
+            aplicaRetroactivos: Yup.string().required('Marque una opcion'),
+            aplicaPrima: Yup.string().required('Marque una opcion'),
+            enviarBoletaPago: Yup.string().required('Marque una opcion'),
+            indemnizacionQuinquenios: Yup.string().required('Marque una opcion'),
+            indemnizacion: Yup.string().required('Marque una opcion'),
+            porcentajeCentroCosto: Yup.string().required('Es requerido'),
+            cuentaBancaria: Yup.string().required('Es requerido'),
+            aplicaAFP: Yup.string().required('Marque una opcion'),
+            nroAFP: Yup.string().required('Es requerido'),
+            jubilado: Yup.string().required('Marque una opcion'),
+            aportaAFP: Yup.string().required('Marque una opcion'),
+            aplicaCajaSalud: Yup.string().required('Marque una opcion'),
+            nroAsegurado: Yup.string().required('Es requerido'),
+            discapacidad: Yup.string().required('Marque una opcion'),
+            requiereApruebeVacaciones: Yup.string().required('Marque una opcion'),
+            valorLunes: Yup.string().required('Es requerido'),
+            valorMartes: Yup.string().required('Es requerido'),
+            valorMiercoles: Yup.string().required('Es requerido'),
+            valorJueves: Yup.string().required('Es requerido'),
+            valorViernes: Yup.string().required('Es requerido'),
+            valorSabado: Yup.string().required('Es requerido'),
+            valorDomingo: Yup.string().required('Es requerido'),
+            codigoAsistencia: Yup.string().required('Es requerido'),
+            diasporMes: Yup.string().required('Marque una opcion'),
+            controlarAsistencia: Yup.string().required('Marque una opcion'),
+            bonoExtra: Yup.string().required('Marque una opcion'),
+            bonoExtraNocturna: Yup.string().required('Marque una opcion'),
+            horasParaHorasExtras: Yup.string().required('Marque una opcion'),
+            horasPorDia: Yup.string().required('Marque una opcion'),
+            descuentoPorFalta: Yup.string().required('Marque una opcion'),
+            descuentoPorAtraso: Yup.string().required('Marque una opcion'),
+            dominicales: Yup.string().required('Marque una opcion'),
+            trabajaDomingo: Yup.string().required('Marque una opcion'),
+            HorasPlanillas: Yup.string().required('Marque una opcion'),
+            unidad: Yup.string().required('Debe selecionar almenos una opcion'),
+            sucursal: Yup.string().required('Debe selecionar almenos una opcion'),
+            cargo: Yup.string().required('Debe selecionar almenos una opcion'),
+            clasificacionlaboral: Yup.string().required('Debe selecionar almenos una opcion'),
+            modalidadContrato: Yup.string().required('Debe selecionar almenos una opcion'),
+            tipoContrato: Yup.string().required('Debe selecionar almenos una opcion'),
+            informacionContable: Yup.string().required('Debe selecionar almenos una opcion'),
+            centroCosto: Yup.string().required('Debe selecionar almenos una opcion'),
+            formaPago: Yup.string().required('Debe selecionar almenos una opcion'),
+            tipoCuenta: Yup.string().required('Debe selecionar almenos una opcion'),
+            banco: Yup.string().required('Debe selecionar almenos una opcion'),
+            administracionPensiones: Yup.string().required('Debe selecionar almenos una opcion'),
+            cajaSalud: Yup.string().required('Debe selecionar almenos una opcion'),
+            formacionPrincial: Yup.string().required('Debe selecionar almenos una opcion'),
+            sexo: Yup.string().required('Debe selecionar almenos una opcion'),
         }),
-        validateOnBlur: false,
+        validateOnBlur: true,
 
     });
 
@@ -242,18 +342,18 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
         }
     }
 
-    const onSave = () => {
+    const onSave = async () => {
+        await validateForm(values);
         console.log(values)
+        console.log(isValid, errors)
         if (isValid) {
             //console.log(values)
             StoreColaborador();
         }
     }
 
-
     useEffect(() => {
         if (tipo == 'editar') {
-
             console.log('TIPO', tipo, 'PARAMS', id)
         } else {
 
@@ -261,6 +361,7 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
         CreateColaborador();
         setloader(false);
         return () => {
+
         }
     }, [])
 
@@ -272,13 +373,13 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
+            <Typography variant="h6" gutterBottom>
+                Registra nuevo colaboradores
+            </Typography>
             <Card sx={{ minWidth: 275 }}>
                 <CardContent >
                     <React.Fragment>
                         <form onSubmit={handleSubmit}>
-                            <Typography variant="h6" gutterBottom>
-                                REGISTRA NUEVO COLABORADOR
-                            </Typography>
                             <Typography variant="subtitle1" gutterBottom style={{ color: '#898585' }}>
                                 INFORMACION PERSONAL
                             </Typography>
@@ -310,6 +411,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                             name="departamento"
                                             value={values.departamento}
                                             onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            error={!!errors.departamento}
                                             label="Expedido"
                                         >
                                             {
@@ -318,6 +421,7 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                                 })
                                             }
                                         </Select>
+                                        <FormHelperText error={!!errors.departamento}>{errors.departamento}</FormHelperText>
                                     </FormControl>
                                 </Grid>
                                 <Grid item xs={12} sm={4}>
@@ -337,6 +441,7 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                                 })
                                             }
                                         </Select>
+                                        <FormHelperText error={!!errors.tipoDocumento}>{errors.tipoDocumento}</FormHelperText>
                                     </FormControl>
                                 </Grid>
                                 <Grid item xs={12} sm={4}>
@@ -368,6 +473,7 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                                 })
                                             }
                                         </Select>
+                                        <FormHelperText error={!!errors.nacionalidad}>{errors.nacionalidad}</FormHelperText>
                                     </FormControl>
                                 </Grid>
                                 <Grid item xs={12} sm={4}>
@@ -418,8 +524,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={4}>
                                     <TextField
                                         required
-                                        id="apellidosMat"
-                                        name="apellidosMat"
+                                        id="apellidoMaterno"
+                                        name="apellidoMaterno"
                                         label="Apellido Materno"
                                         fullWidth
                                         autoComplete="family-name"
@@ -433,8 +539,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={4}>
                                     <TextField
                                         required
-                                        id="apellidosPat"
-                                        name="apellidosPat"
+                                        id="apellidoPaterno"
+                                        name="apellidoPaterno"
                                         label="Apellido Paterno"
                                         fullWidth
                                         autoComplete="family-name"
@@ -448,8 +554,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={4}>
                                     <TextField
                                         required
-                                        id="apellidosCas"
-                                        name="apellidosCas"
+                                        id="apellidoCasado"
+                                        name="apellidoCasado"
                                         label="Apellido Casado/a"
                                         fullWidth
                                         autoComplete="family-name"
@@ -463,20 +569,26 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={4}>
                                     <LocalizationProvider dateAdapter={AdapterDayjs} >
                                         <DatePicker
+
                                             label="Fecha Nacimiento"
                                             value={values.fechaNacimiento}
-                                            onChange={(value) => setFieldValue("fechaNacimiento", value, true)}
+                                            onChange={(value) => {
+                                                setFieldValue("fechaNacimiento", value, true);
+                                                setFieldTouched("fechaNacimiento", true, true);
+
+                                            }}
                                             toolbarFormat="DD/MM/YYYY"
                                             inputFormat="DD/MM/YYYY"
+
                                             renderInput={(params) => <TextField {...params} fullWidth />}
                                         />
                                     </LocalizationProvider>
+                                    <FormHelperText error={!!errors.fechaNacimiento}>{errors.fechaNacimiento == undefined ? '' : 'Error'}</FormHelperText>
                                 </Grid>
-
                                 <Grid item xs={12}>
                                     <TextField
-                                        id="LugarNacimiento"
-                                        name="LugarNacimiento"
+                                        id="lugarNacimiento"
+                                        name="lugarNacimiento"
                                         label="Lugar de nacimiento"
                                         fullWidth
                                         autoComplete="shipping address-line2"
@@ -488,25 +600,32 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={4}>
-                                    <FormControl fullWidth>
-                                        <FormLabel id="demo-row-radio-buttons-group-label">Sexo</FormLabel>
-                                        <RadioGroup
-                                            row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
+                                <FormControl variant="standard" fullWidth>
+                                        <InputLabel id="demo-simple-select-standard-label">Genero</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-standard-label"
+                                            id="sexo"
                                             name="sexo"
+                                            value={values.sexo}
                                             onChange={handleChange}
+                                            label="Genero"
                                         >
-                                            <FormControlLabel value="1" control={<Radio />} label="Masculino" />
-                                            <FormControlLabel value="2" control={<Radio />} label="Femenino" />
-                                        </RadioGroup>
+                                            {
+                                                sexo.map((sexo, i) => {
+                                                    return (<MenuItem key={i} value={sexo.id}>{sexo.nombreSexo} </MenuItem>)
+                                                })
+                                            }
+                                        </Select>
+                                        <FormHelperText sx={{ mt: 0 }} error={!!errors.sexo}>{errors.sexo}</FormHelperText>
                                     </FormControl>
                                 </Grid>
+
                                 <Grid item xs={12} sm={4}>
                                     <FormControl variant="standard" fullWidth>
                                         <InputLabel id="demo-simple-select-standard-label">Estado Civil</InputLabel>
                                         <Select
                                             labelId="demo-simple-select-standard-label"
-                                            id="demo-simple-select-standard"
+                                            id="estadoCivil"
                                             name="estadoCivil"
                                             value={values.estadoCivil}
                                             onChange={handleChange}
@@ -523,8 +642,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={4}>
                                     <TextField
                                         required
-                                        id="licConducir"
-                                        name="licConducir"
+                                        id="licenciaConducir"
+                                        name="licenciaConducir"
                                         label="Licencia Conducir"
                                         fullWidth
                                         autoComplete="shipping postal-code"
@@ -550,8 +669,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={4}>
                                     <TextField
                                         required
-                                        id="telefono"
-                                        name="telefono"
+                                        id="telefonoFijo"
+                                        name="telefonoFijo"
                                         label="Telefono Fijo"
                                         fullWidth
                                         autoComplete="shipping postal-code"
@@ -580,8 +699,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={4}>
                                     <TextField
                                         required
-                                        id="telefonoTrabajo"
-                                        name="telefonoTrabajo"
+                                        id="telefonoFijoTrabajo"
+                                        name="telefonoFijoTrabajo"
                                         label="Telefono Trabajo"
                                         fullWidth
                                         autoComplete="shipping postal-code"
@@ -589,14 +708,14 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         onBlur={handleBlur}
                                         onChange={handleChange}
                                         helperText={errors.telefonoFijoTrabajo}
-                                        error={!!errors.Celular}
+                                        error={!!errors.telefonoFijoTrabajo}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={4}>
                                     <TextField
                                         required
-                                        id="ContacEmergencia"
-                                        name="ContacEmergencia"
+                                        id="ContactoEmegencia"
+                                        name="ContactoEmegencia"
                                         label="Contacto Emergencia"
                                         fullWidth
                                         autoComplete="shipping postal-code"
@@ -610,8 +729,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={4}>
                                     <TextField
                                         required
-                                        id="TelEmergencia"
-                                        name="TelEmergencia"
+                                        id="TelefonoEmergencia"
+                                        name="TelefonoEmergencia"
                                         label="Telefono Emergencia"
                                         fullWidth
                                         autoComplete="shipping country"
@@ -628,10 +747,11 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="viviendaPropia"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="S" control={<Radio />} label="Si" />
-                                            <FormControlLabel value="N" control={<Radio />} label="No" />
+                                            <FormControlLabel value="1" control={<Radio />} label="Si" />
+                                            <FormControlLabel value="2" control={<Radio />} label="No" />
 
                                         </RadioGroup>
                                     </FormControl>
@@ -642,10 +762,11 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="vehiculoPropio"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="Si" />
-                                            <FormControlLabel value="male" control={<Radio />} label="No" />
+                                            <FormControlLabel value="1" control={<Radio />} label="Si" />
+                                            <FormControlLabel value="2" control={<Radio />} label="No" />
 
                                         </RadioGroup>
                                     </FormControl>
@@ -653,8 +774,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={4}>
                                     <TextField
                                         required
-                                        id="tipoSangre"
-                                        name="tipoSangre"
+                                        id="TipoSangre"
+                                        name="TipoSangre"
                                         label="Tipo Sangre"
                                         fullWidth
                                         autoComplete="shipping country"
@@ -668,8 +789,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={4}>
                                     <TextField
                                         required
-                                        id="factoSangre"
-                                        name="factoSangre"
+                                        id="FactorSangre"
+                                        name="FactorSangre"
                                         label="Factor Sangre"
                                         fullWidth
                                         autoComplete="shipping country"
@@ -683,8 +804,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={12}>
                                     <TextField
                                         required
-                                        id="direccion"
-                                        name="direccion"
+                                        id="Dirrecion"
+                                        name="Dirrecion"
                                         label="Direccion"
                                         fullWidth
                                         autoComplete="shipping country"
@@ -698,8 +819,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={12}>
                                     <TextField
                                         required
-                                        id="email"
-                                        name="email"
+                                        id="Email"
+                                        name="Email"
                                         label="Email"
                                         fullWidth
                                         autoComplete="shipping country"
@@ -742,9 +863,9 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={4}>
                                     <TextField
                                         required
-                                        id="conyugeLugarTrabajo"
-                                        name="conyugeLugarTrabajo"
-                                        label="Lugar Trabajo"
+                                        id="conyugeLugarNacimiento"
+                                        name="conyugeLugarNacimiento"
+                                        label="Conyuge Lugar Nacimiento"
                                         fullWidth
                                         autoComplete="given-name"
                                         variant="standard"
@@ -896,6 +1017,7 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <Select
                                             labelId="demo-simple-select-standard-label"
                                             id="cargo"
+                                            name="cargo"
                                             value={values.cargo}
                                             onChange={handleChange}
                                             label="Cargo"
@@ -914,10 +1036,11 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="ModohaberBasico"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="Monto mensual" />
-                                            <FormControlLabel value="male" control={<Radio />} label="Monto quincenal" />
+                                            <FormControlLabel value="1" control={<Radio />} label="Monto mensual" />
+                                            <FormControlLabel value="2" control={<Radio />} label="Monto quincenal" />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
@@ -942,18 +1065,19 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="ModoQuincena"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="porcentaje" />
-                                            <FormControlLabel value="male" control={<Radio />} label="Monto" />
+                                            <FormControlLabel value="1" control={<Radio />} label="porcentaje" />
+                                            <FormControlLabel value="2" control={<Radio />} label="Monto" />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
                                 <Grid item xs={12} sm={4}>
                                     <TextField
                                         required
-                                        id="haberQuincena"
-                                        name="haberQuincena"
+                                        id="HaberQuincena"
+                                        name="HaberQuincena"
                                         label="Haber quincena"
                                         fullWidth
                                         autoComplete="given-name"
@@ -982,8 +1106,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={4}>
                                     <TextField
                                         required
-                                        id="telefonoCelular"
-                                        name="telefonoCelular"
+                                        id="celularLaboral"
+                                        name="celularLaboral"
                                         label="Celular"
                                         fullWidth
                                         autoComplete="shipping country"
@@ -997,8 +1121,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={12}>
                                     <TextField
                                         required
-                                        id="laboralDireccion"
-                                        name="laboralDireccion"
+                                        id="dirrecionLaboral"
+                                        name="dirrecionLaboral"
                                         label="Direccion"
                                         fullWidth
                                         autoComplete="shipping country"
@@ -1012,8 +1136,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={12}>
                                     <TextField
                                         required
-                                        id="laboralEmail"
-                                        name="laboralEmail"
+                                        id="emailLaboral"
+                                        name="emailLaboral"
                                         label="Email"
                                         fullWidth
                                         autoComplete="shipping country"
@@ -1029,8 +1153,9 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <InputLabel id="demo-simple-select-standard-label">Clasificacion Laboral</InputLabel>
                                         <Select
                                             labelId="demo-simple-select-standard-label"
-                                            id="cargo"
-                                            value={values.cargo}
+                                            id="clasificacionlaboral"
+                                            name="clasificacionlaboral"
+                                            value={values.clasificacionlaboral}
                                             onChange={handleChange}
                                             label="Cargo"
                                         >
@@ -1048,6 +1173,7 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <Select
                                             labelId="demo-simple-select-standard-label"
                                             id="ModalidadContrato"
+                                            name="modalidadContrato"
                                             value={values.modalidadContrato}
                                             onChange={handleChange}
                                             label="Cargo"
@@ -1066,6 +1192,7 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <Select
                                             labelId="demo-simple-select-standard-label"
                                             id="tipoContrato"
+                                            name="tipoContrato"
                                             value={values.tipoContrato}
                                             onChange={handleChange}
                                             label="Cargo"
@@ -1081,8 +1208,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={12}>
                                     <TextField
                                         required
-                                        id="motivoContratacion"
-                                        name="motivoContratacion"
+                                        id="motivoContrato"
+                                        name="motivoContrato"
                                         label="Motivo de Contratacion"
                                         fullWidth
                                         autoComplete="shipping country"
@@ -1123,10 +1250,11 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="excliblePlanilla"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="Si" />
-                                            <FormControlLabel value="male" control={<Radio />} label="No" />
+                                            <FormControlLabel value="1" control={<Radio />} label="Si" />
+                                            <FormControlLabel value="2" control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
@@ -1136,10 +1264,11 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="aguinaldoMes1"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="Si" />
-                                            <FormControlLabel value="male" control={<Radio />} label="No" />
+                                            <FormControlLabel value="1" control={<Radio />} label="Si" />
+                                            <FormControlLabel value="2" control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
@@ -1149,10 +1278,11 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="aplica2aguinaldo"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="si" />
-                                            <FormControlLabel value="male" control={<Radio />} label="No" />
+                                            <FormControlLabel value="1" control={<Radio />} label="si" />
+                                            <FormControlLabel value="2" control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
@@ -1162,10 +1292,11 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="aplicaRetroactivos"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="si" />
-                                            <FormControlLabel value="male" control={<Radio />} label="No" />
+                                            <FormControlLabel value="1" control={<Radio />} label="si" />
+                                            <FormControlLabel value="2" control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
@@ -1175,23 +1306,25 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="aplicaPrima"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="si" />
-                                            <FormControlLabel value="male" control={<Radio />} label="No" />
+                                            <FormControlLabel value="1" control={<Radio />} label="si" />
+                                            <FormControlLabel value="2" control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
                                 <Grid item xs={12} sm={4}>
                                     <FormControl fullWidth>
-                                        <FormLabel id="demo-row-radio-buttons-group-label">Enviar Boleta de pago</FormLabel>
+                                        <FormLabel id="demo-row-radio-buttons-group-label">Enviar Boleta de pago por Email</FormLabel>
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="enviarBoletaPago"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="si" />
-                                            <FormControlLabel value="male" control={<Radio />} label="No" />
+                                            <FormControlLabel value="1" control={<Radio />} label="si" />
+                                            <FormControlLabel value="2" control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
@@ -1201,10 +1334,11 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="indemnizacionQuinquenios"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="Desde ultimo quinquenio" />
-                                            <FormControlLabel value="male" control={<Radio />} label="Desde ultimo pago a cuenta de indemnizacion" />
+                                            <FormControlLabel value="1" control={<Radio />} label="Desde ultimo quinquenio" />
+                                            <FormControlLabel value="2" control={<Radio />} label="Desde ultimo pago a cuenta de indemnizacion" />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
@@ -1214,11 +1348,12 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="indemnizacion"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="Desde ultimo quinquenio" />
-                                            <FormControlLabel value="male" control={<Radio />} label="Desde ultimo pago a cuenta de indemnizacion" />
-                                            <FormControlLabel value="male" control={<Radio />} label="Desde Fecha de ingreso" />
+                                            <FormControlLabel value="1" control={<Radio />} label="Desde ultimo quinquenio" />
+                                            <FormControlLabel value="2" control={<Radio />} label="Desde ultimo pago a cuenta de indemnizacion" />
+                                            <FormControlLabel value="3" control={<Radio />} label="Desde Fecha de ingreso" />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
@@ -1235,14 +1370,15 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <InputLabel id="demo-simple-select-standard-label">Informacion contable</InputLabel>
                                         <Select
                                             labelId="demo-simple-select-standard-label"
-                                            id="tipoContrato"
+                                            id="informacionContable"
+                                            name="informacionContable"
                                             value={values.informacionContable}
                                             onChange={handleChange}
                                             label="Cargo"
                                         >
                                             {
                                                 informacionContable.map((informacionContable, i) => {
-                                                    return (<MenuItem key={i} value={informacionContable.id}>{informacionContable.NombreInformacionContable}</MenuItem>)
+                                                    return (<MenuItem key={i} value={informacionContable.id}>{informacionContable.nombreInformacionContable}</MenuItem>)
                                                 })
                                             }
                                         </Select>
@@ -1259,16 +1395,16 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={4}>
                                     <TextField
                                         required
-                                        id="centroCosto"
-                                        name="centroCosto"
-                                        label="Porcentaje"
+                                        id="porcentajeCentroCosto"
+                                        name="porcentajeCentroCosto"
+                                        label="Porcentaje CentroCosto"
                                         fullWidth
                                         autoComplete="given-name"
                                         variant="standard"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
-                                        helperText={errors.centroCosto}
-                                        error={!!errors.centroCosto}
+                                        helperText={errors.porcentajeCentroCosto}
+                                        error={!!errors.porcentajeCentroCosto}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={4}>
@@ -1276,7 +1412,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <InputLabel id="demo-simple-select-standard-label">Añadir centro de costo</InputLabel>
                                         <Select
                                             labelId="demo-simple-select-standard-label"
-                                            id="tipoContrato"
+                                            id="centroCosto"
+                                            name="centroCosto"
                                             value={values.centroCosto}
                                             onChange={handleChange}
                                             label="Cargo"
@@ -1303,6 +1440,7 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <Select
                                             labelId="demo-simple-select-standard-label"
                                             id="formaPago"
+                                            name="formaPago"
                                             value={values.formaPago}
                                             onChange={handleChange}
                                             label="Foma de pago"
@@ -1321,6 +1459,7 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <Select
                                             labelId="demo-simple-select-standard-label"
                                             id="tipoCuenta"
+                                            name="tipoCuenta"
                                             value={values.tipoCuenta}
                                             onChange={handleChange}
                                             label="Tipo Cuenta"
@@ -1353,14 +1492,15 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <InputLabel id="demo-simple-select-standard-label">Banco</InputLabel>
                                         <Select
                                             labelId="demo-simple-select-standard-label"
-                                            id="tipoContrato"
+                                            id="banco"
+                                            name="banco"
                                             value={values.banco}
                                             onChange={handleChange}
-                                            label="Cargo"
+                                            label="Banco"
                                         >
                                             {
                                                 banco.map((banco, i) => {
-                                                    return (<MenuItem key={i} value={banco.id}>{banco.NombreBanco}</MenuItem>)
+                                                    return (<MenuItem key={i} value={banco.id}>{banco.nombreBanco}</MenuItem>)
                                                 })
                                             }
                                         </Select>
@@ -1380,18 +1520,19 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="aplicaAFP"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="Si" />
-                                            <FormControlLabel value="male" control={<Radio />} label="No" />
+                                            <FormControlLabel value="1" control={<Radio />} label="Si" />
+                                            <FormControlLabel value="2" control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
                                 <Grid item xs={12} sm={4}>
                                     <TextField
                                         required
-                                        id="NroAfp"
-                                        name="NroAfp"
+                                        id="nroAFP"
+                                        name="nroAFP"
                                         label="Nro Afp"
                                         fullWidth
                                         autoComplete="given-name"
@@ -1407,7 +1548,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <InputLabel id="demo-simple-select-standard-label">Administracion de pensiones</InputLabel>
                                         <Select
                                             labelId="demo-simple-select-standard-label"
-                                            id="adminPensiones"
+                                            id="administracionPensiones"
+                                            name="administracionPensiones"
                                             value={values.administracionPensiones}
                                             onChange={handleChange}
                                             label="Foma de pago"
@@ -1426,10 +1568,11 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="jubilado"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="Si" />
-                                            <FormControlLabel value="male" control={<Radio />} label="No" />
+                                            <FormControlLabel value="1" control={<Radio />} label="Si" />
+                                            <FormControlLabel value="2" control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
@@ -1439,10 +1582,11 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="aportaAFP"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="Si" />
-                                            <FormControlLabel value="male" control={<Radio />} label="No" />
+                                            <FormControlLabel value="1" control={<Radio />} label="Si" />
+                                            <FormControlLabel value="2" control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
@@ -1460,10 +1604,11 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="aplicaCajaSalud"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="Si" />
-                                            <FormControlLabel value="male" control={<Radio />} label="No" />
+                                            <FormControlLabel value="1" control={<Radio />} label="Si" />
+                                            <FormControlLabel value="2" control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
@@ -1472,10 +1617,11 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <InputLabel id="demo-simple-select-standard-label">Caja de salud</InputLabel>
                                         <Select
                                             labelId="demo-simple-select-standard-label"
-                                            id="adminPensiones"
+                                            id="cajaSalud"
+                                            name="cajaSalud"
                                             value={values.cajaSalud}
                                             onChange={handleChange}
-                                            label="Foma de pago"
+                                            label="Caja de salud"
                                         >
                                             {
                                                 cajaSalud.map((cajaSalud, i) => {
@@ -1514,10 +1660,11 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="discapacidad"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="Si" />
-                                            <FormControlLabel value="male" control={<Radio />} label="No" />
+                                            <FormControlLabel value="1" control={<Radio />} label="Si" />
+                                            <FormControlLabel value="2" control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
@@ -1535,10 +1682,11 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="requiereApruebeVacaciones"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="Si" />
-                                            <FormControlLabel value="male" control={<Radio />} label="No" />
+                                            <FormControlLabel value="1" control={<Radio />} label="Si" />
+                                            <FormControlLabel value="2" control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
@@ -1553,8 +1701,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={2}>
                                     <TextField
                                         required
-                                        id="vacaLunes"
-                                        name="vacaLunes"
+                                        id="valorLunes"
+                                        name="valorLunes"
                                         label="Lunes valor"
                                         fullWidth
                                         autoComplete="given-name"
@@ -1568,8 +1716,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={2}>
                                     <TextField
                                         required
-                                        id="vacaLunes"
-                                        name="vacaLunes"
+                                        id="valorMartes"
+                                        name="valorMartes"
                                         label="Martes valor"
                                         fullWidth
                                         autoComplete="given-name"
@@ -1583,8 +1731,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={2}>
                                     <TextField
                                         required
-                                        id="vacaMiercoles"
-                                        name="vacaMiercoles"
+                                        id="valorMiercoles"
+                                        name="valorMiercoles"
                                         label="Miercoles valor"
                                         fullWidth
                                         autoComplete="given-name"
@@ -1598,8 +1746,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={2}>
                                     <TextField
                                         required
-                                        id="vacaJueves"
-                                        name="vacaJueves"
+                                        id="valorJueves"
+                                        name="valorJueves"
                                         label="Jueves valor"
                                         fullWidth
                                         autoComplete="given-name"
@@ -1613,8 +1761,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={2}>
                                     <TextField
                                         required
-                                        id="vacaViernes"
-                                        name="vacaViernes"
+                                        id="valorViernes"
+                                        name="valorViernes"
                                         label="Viernes valor"
                                         fullWidth
                                         autoComplete="given-name"
@@ -1628,8 +1776,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={2}>
                                     <TextField
                                         required
-                                        id="vacaSabado"
-                                        name="vacaSabado"
+                                        id="valorSabado"
+                                        name="valorSabado"
                                         label="Sabado valor"
                                         fullWidth
                                         autoComplete="given-name"
@@ -1643,8 +1791,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={2}>
                                     <TextField
                                         required
-                                        id="vacaDomingo"
-                                        name="vacaDomingo"
+                                        id="valorDomingo"
+                                        name="valorDomingo"
                                         label="Domingo valor"
                                         fullWidth
                                         autoComplete="given-name"
@@ -1684,10 +1832,11 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="diasporMes"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="30" />
-                                            <FormControlLabel value="male" control={<Radio />} label="26" />
+                                            <FormControlLabel value="1" control={<Radio />} label="30" />
+                                            <FormControlLabel value="2" control={<Radio />} label="26" />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
@@ -1697,10 +1846,11 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="controlarAsistencia"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="Si" />
-                                            <FormControlLabel value="male" control={<Radio />} label="No" />
+                                            <FormControlLabel value="1" control={<Radio />} label="Si" />
+                                            <FormControlLabel value="2" control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
@@ -1710,10 +1860,11 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="bonoExtra"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="Si" />
-                                            <FormControlLabel value="male" control={<Radio />} label="No" />
+                                            <FormControlLabel value="1" control={<Radio />} label="Si" />
+                                            <FormControlLabel value="2" control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
@@ -1723,18 +1874,19 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="bonoExtraNocturna"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="Si" />
-                                            <FormControlLabel value="male" control={<Radio />} label="No" />
+                                            <FormControlLabel value="1" control={<Radio />} label="Si" />
+                                            <FormControlLabel value="2" control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
                                 <Grid item xs={12} sm={4}>
                                     <TextField
                                         required
-                                        id="horasTrabajo"
-                                        name="horasTrabajo"
+                                        id="horasParaHorasExtras"
+                                        name="horasParaHorasExtras"
                                         label="Horas de trabajo para horas extras"
                                         fullWidth
                                         autoComplete="given-name"
@@ -1748,8 +1900,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                 <Grid item xs={12} sm={4}>
                                     <TextField
                                         required
-                                        id="horasDia"
-                                        name="horasDia"
+                                        id="horasPorDia"
+                                        name="horasPorDia"
                                         label="Horas de trabajo por dia"
                                         fullWidth
                                         autoComplete="given-name"
@@ -1766,10 +1918,11 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="descuentoPorFalta"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="Si" />
-                                            <FormControlLabel value="male" control={<Radio />} label="No" />
+                                            <FormControlLabel value="1" control={<Radio />} label="Si" />
+                                            <FormControlLabel value="2" control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
@@ -1779,10 +1932,11 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="descuentoPorAtraso"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="Si" />
-                                            <FormControlLabel value="male" control={<Radio />} label="No" />
+                                            <FormControlLabel value="1" control={<Radio />} label="Si" />
+                                            <FormControlLabel value="2" control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
@@ -1792,10 +1946,11 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="dominicales"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="Si" />
-                                            <FormControlLabel value="male" control={<Radio />} label="No" />
+                                            <FormControlLabel value="1" control={<Radio />} label="Si" />
+                                            <FormControlLabel value="2" control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
@@ -1805,18 +1960,19 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
+                                            name="trabajaDomingo"
+                                            onChange={handleChange}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="Si" />
-                                            <FormControlLabel value="male" control={<Radio />} label="No" />
+                                            <FormControlLabel value="1" control={<Radio />} label="Si" />
+                                            <FormControlLabel value="2" control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
                                 <Grid item xs={12} sm={4}>
                                     <TextField
                                         required
-                                        id="horasTrabajoPlanilla"
-                                        name="horasTrabajoPlanilla"
+                                        id="HorasPlanillas"
+                                        name="HorasPlanillas"
                                         label="Horas de trabajo pora planilla"
                                         fullWidth
                                         autoComplete="given-name"
@@ -1840,7 +1996,8 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                         <InputLabel id="demo-simple-select-standard-label">Formacion principal</InputLabel>
                                         <Select
                                             labelId="demo-simple-select-standard-label"
-                                            id="adminPensiones"
+                                            id="formacionPrincial"
+                                            name="formacionPrincial"
                                             value={values.formacionPrincial}
                                             onChange={handleChange}
                                             label="Foma de pago"

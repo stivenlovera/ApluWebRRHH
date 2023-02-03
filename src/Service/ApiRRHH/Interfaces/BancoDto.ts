@@ -1,4 +1,4 @@
 export interface Banco {
     id:number;
-    NombreBanco:string;
+    nombreBanco:string;
 }

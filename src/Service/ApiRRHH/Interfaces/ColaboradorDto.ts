@@ -108,6 +108,8 @@ export interface StoreColaborador {
     fechaIngresoVacaciones:Date;
     fechaIngresoVacacionesAnt:Date;
     fechaIngresoBonoAntiguedad:Date;
+    viviendaPropia:string;
+    vehiculoPropio:string;
     oficina:string;
     ModohaberBasico:string;
     haberBasico:string;
@@ -126,6 +128,7 @@ export interface StoreColaborador {
     aplicaRetroactivos:string;
     aplicaPrima:string;
     enviarBoletaPago:string;
+    indemnizacionQuinquenios:string;
     indemnizacion:string;
     porcentajeCentroCosto:string;
     cuentaBancaria:string;
@@ -156,7 +159,6 @@ export interface StoreColaborador {
     dominicales:string;
     trabajaDomingo:string;
     HorasPlanillas:string;
-
     unidad: string;
     sucursal: string;
     cargo: string;

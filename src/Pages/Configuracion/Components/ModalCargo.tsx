@@ -7,9 +7,11 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-
-export const ModalCargo = () => {
-    const [open, setOpen] = React.useState(false);
+interface ModalCargoProps {
+    openModal: boolean
+}
+export const ModalCargo = ({ openModal }: ModalCargoProps) => {
+    const [open, setOpen] = React.useState(openModal);
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
