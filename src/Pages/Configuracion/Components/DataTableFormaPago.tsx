@@ -15,7 +15,7 @@ import { Loading } from '../../Colaboradores/Components/Loading';
 import { GetOficinaService } from '../../../Service/ApiRRHH/Oficina';
 import { IOficina } from '../../../Service/ApiRRHH/Interfaces/Oficina';
 import { ModalOficina } from './ModalOficina';
-export const DataTableOficina = () => {
+export const DataTableFormaPago = () => {
 
   const [{ openModal, title, type, id, nombreAceptar, nombreCancelar }, setOpencargo] = useState({
     openModal: false,
@@ -144,8 +144,8 @@ export const DataTableOficina = () => {
   }, [])
   return (
     <>
-      <Typography variant='h6' sx={{ mb: 2 }}>Lista Oficinas</Typography>
-      <Button sx={{ mb: 2 }} variant="contained" onClick={OpenNuevoCargo} >Registrar Sucursal</Button>
+      <Typography variant='h6' sx={{ mb: 2 }}>Lista Formas de pagos</Typography>
+      <Button sx={{ mb: 2 }} variant="contained" onClick={OpenNuevoCargo} >Añadir</Button>
       <Paper style={{ position: 'relative' }}>
         <Grid
           rows={rows}

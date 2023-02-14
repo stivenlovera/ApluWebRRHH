@@ -8,13 +8,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { Grid, TextField } from '@mui/material';
+import { UseDataTableTipoContrato } from '../hooks/useDataTableTipoContrato';
 
-import { UseDataTableCargo } from './hooks/UseDataTableCargo';
-
-interface cargo {
-    nombreUnidad: string
-}
-interface ModalCargoProps {
+interface ModalTipoContratoProps {
     closeModal: (event: React.MouseEvent<HTMLElement>) => void
     open: boolean
     tipo: string,
@@ -23,14 +19,11 @@ interface ModalCargoProps {
     nombreAceptar: string;
     nombreCancelar: string
 }
-const initialState: cargo = {
-    nombreUnidad: ''
-}
-export const ModalCargo = ({ closeModal, open, titulo, tipo, id = 0, nombreAceptar, nombreCancelar }: ModalCargoProps) => {
+export const ModalTipoContrato = ({ closeModal, open, titulo, tipo, id = 0, nombreAceptar, nombreCancelar }: ModalTipoContratoProps) => {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-    const dataTableCargo = UseDataTableCargo({ closeModal, open, titulo, tipo, id, nombreAceptar, nombreCancelar });
+    const dataTableTipoContrato = UseDataTableTipoContrato({ closeModal, open, titulo, tipo, id, nombreAceptar, nombreCancelar });
 
     return (
         <>
@@ -48,16 +41,16 @@ export const ModalCargo = ({ closeModal, open, titulo, tipo, id = 0, nombreAcept
                         tipo == 'eliminar' ? (<></>) : (<Grid container spacing={3}>
                             <Grid item xs={12} sm={12}>
                                 <TextField
-                                    name="nombreCargo"
-                                    label="Nombre del cargo"
+                                    name="nombreTipoContrato"
+                                    label="Nombre Tipo contrato"
                                     fullWidth
                                     autoComplete="given-name"
                                     variant="standard"
-                                    onBlur={dataTableCargo.handleBlur}
-                                    onChange={dataTableCargo.handleChange}
-                                    helperText={dataTableCargo.errors.nombreCargo}
-                                    error={!!dataTableCargo.errors.nombreCargo}
-                                    value={dataTableCargo.values.nombreCargo}
+                                    onBlur={dataTableTipoContrato.handleBlur}
+                                    onChange={dataTableTipoContrato.handleChange}
+                                    helperText={dataTableTipoContrato.errors.nombreTipoContrato}
+                                    error={!!dataTableTipoContrato.errors.nombreTipoContrato}
+                                    value={dataTableTipoContrato.values.nombreTipoContrato}
                                 />
                             </Grid>
                         </Grid>)
@@ -67,7 +60,7 @@ export const ModalCargo = ({ closeModal, open, titulo, tipo, id = 0, nombreAcept
                     <Button autoFocus onClick={closeModal}>
                         {nombreCancelar}
                     </Button>
-                    <Button autoFocus onClick={dataTableCargo.onSave}>
+                    <Button autoFocus onClick={dataTableTipoContrato.onSave}>
                         {nombreAceptar}
                     </Button>
                 </DialogActions>

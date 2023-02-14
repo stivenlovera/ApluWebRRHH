@@ -54,7 +54,7 @@ const Login = () => {
         onSubmit: async (value) => {
             try {
                 const { data } = await Axios.post<responseProps>(
-                    `${process.env.REACT_APP_API_RRHH}/auth/login`,
+                    `${process.env.REACT_APP_API_RRHH}/api/auth/login`,
                     value,
                 )
                 if (data.status == 1) {

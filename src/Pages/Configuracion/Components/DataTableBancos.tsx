@@ -12,10 +12,10 @@ import {
 
 import { Button, Typography } from '@mui/material';
 import { Loading } from '../../Colaboradores/Components/Loading';
-import { GetOficinaService } from '../../../Service/ApiRRHH/Oficina';
-import { IOficina } from '../../../Service/ApiRRHH/Interfaces/Oficina';
-import { ModalOficina } from './ModalOficina';
-export const DataTableOficina = () => {
+import { GetSucursalService } from '../../../Service/ApiRRHH/Sucursal';
+import { ISucursal } from '../../../Service/ApiRRHH/Interfaces/SucursalDto';
+import { ModalSucursal } from './ModalSucursal';
+export const DataTableBancos = () => {
 
   const [{ openModal, title, type, id, nombreAceptar, nombreCancelar }, setOpencargo] = useState({
     openModal: false,
@@ -27,16 +27,16 @@ export const DataTableOficina = () => {
   });
 
   const [tableColumnExtensions] = useState([
-    { columnName: 'nombreOficina' },
-    { columnName: 'hhrrSucursalId' },
+    { columnName: 'nombreSucursal' },
+    { columnName: 'direccion' },
     { columnName: 'id', width: 250 },
   ]);
   const [columns] = useState([
-    { name: 'nombreOficina', title: 'OFICINA' },
-    { name: 'hhrrSucursalId', title: 'SUCURSAL' },
+    { name: 'nombreSucursal', title: 'SUCURSAL' },
+    { name: 'direccion', title: 'DIRRECCION' },
     { name: 'id', title: 'ACCIONES' },
   ]);
-  const [rows, setRows] = useState<IOficina[]>([]);
+  const [rows, setRows] = useState<ISucursal[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [lastQuery, setLastQuery] = useState('');
@@ -56,7 +56,7 @@ export const DataTableOficina = () => {
 
   const loadData = async () => {
     try {
-      const { data } = await GetOficinaService();
+      const { data } = await GetSucursalService();
       setRows(data.data);
       setLoading(false);
     } catch (error) {
@@ -95,7 +95,7 @@ export const DataTableOficina = () => {
   function OpenNuevoCargo() {
     setOpencargo({
       openModal: true,
-      title: "Añadir Oficina",
+      title: "Añadir Sucursal",
       type: "nuevo",
       id: 0,
       nombreCancelar: "Cancelar",
@@ -105,7 +105,7 @@ export const DataTableOficina = () => {
   function OpenEditCargo(id: number) {
     setOpencargo({
       openModal: true,
-      title: "Editar Oficina",
+      title: "Editar Sucursal",
       type: "editar",
       id: id,
       nombreCancelar: "Cancelar",
@@ -144,8 +144,8 @@ export const DataTableOficina = () => {
   }, [])
   return (
     <>
-      <Typography variant='h6' sx={{ mb: 2 }}>Lista Oficinas</Typography>
-      <Button sx={{ mb: 2 }} variant="contained" onClick={OpenNuevoCargo} >Registrar Sucursal</Button>
+      <Typography variant='h6' sx={{ mb: 2 }}>Lista de bancos</Typography>
+      <Button sx={{ mb: 2 }} variant="contained" onClick={OpenNuevoCargo} >Añadir</Button>
       <Paper style={{ position: 'relative' }}>
         <Grid
           rows={rows}
@@ -167,7 +167,7 @@ export const DataTableOficina = () => {
         </Grid>
         {loading && <Loading />}
       </Paper>
-      <ModalOficina open={openModal} titulo={title} tipo={type} closeModal={CloseCargo} id={id} nombreAceptar={nombreAceptar} nombreCancelar={nombreCancelar}></ModalOficina>
+      <ModalSucursal open={openModal} titulo={title} tipo={type} closeModal={CloseCargo} id={id} nombreAceptar={nombreAceptar} nombreCancelar={nombreCancelar}></ModalSucursal>
     </>
   )
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Paper from '@mui/material/Paper';
 import { DataTypeProvider, SearchState } from '@devexpress/dx-react-grid';
 import {
@@ -11,15 +11,14 @@ import {
 
 
 import { Button, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
-import { Loading } from '../../Colaboradores/Components/Loading';
-import { GetCargoService } from '../../../Service/ApiRRHH/Cargo';
-import { ICargo } from '../../../Service/ApiRRHH/Interfaces/CargoDto';
-import { GetUnidadService } from '../../../Service/ApiRRHH/Unidad';
-import { IUnidad } from '../../../Service/ApiRRHH/Interfaces/UnidadDto';
-import { ModalUnidad } from './ModalUnidad';
+import { Loading } from '../../../Colaboradores/Components/Loading';
+import { ITipoContrato } from '../../../../Service/ApiRRHH/Interfaces/TipoContratoDto';
+import { GetTipoContrato } from '../../../../Service/ApiRRHH/TipoContrato';
+import { ModalTipoContrato } from './ModalTipoContrato';
+import { CTipografia } from '../../../../Components/Labels/CTipografia';
 
-export const DataTableUnidad = () => {
+export const DataTableTipoContrato = () => {
+
     const [{ openModal, title, type, id, nombreAceptar, nombreCancelar }, setOpencargo] = useState({
         openModal: false,
         title: "",
@@ -27,16 +26,17 @@ export const DataTableUnidad = () => {
         id: 0,
         nombreAceptar: "",
         nombreCancelar: ""
-    })
+    });
+
     const [tableColumnExtensions] = useState([
-        { columnName: 'nombreUnidad' },
-        { columnName: 'acciones', width: 250 },
+        { columnName: 'nombreTipoContrato' },
+        { columnName: 'id', width: 250 },
     ]);
     const [columns] = useState([
-        { name: 'nombreUnidad', title: 'UNIDAD' },
+        { name: 'nombreTipoContrato', title: 'TIPO CONTRATO' },
         { name: 'id', title: 'ACCIONES' },
     ]);
-    const [rows, setRows] = useState<IUnidad[]>([]);
+    const [rows, setRows] = useState<ITipoContrato[]>([]);
     const [loading, setLoading] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const [lastQuery, setLastQuery] = useState('');
@@ -56,26 +56,12 @@ export const DataTableUnidad = () => {
 
     const loadData = async () => {
         try {
-            const { data } = await GetUnidadService();
+            const { data } = await GetTipoContrato();
             setRows(data.data);
             setLoading(false);
-            /*  const queryString = getQueryString();
-             if (queryString !== lastQuery && !loading) {
-                
-                 fetch(queryString)
-                     .then(response => response.json())
-                     .then((orders) => {
-                         setRows(orders.data);
-                         setLoading(false);
-                     })
-                     .catch(() => setLoading(false));
-                 setLastQuery(queryString);
-             } */
         } catch (error) {
             setLoading(false)
         }
-
-
     };
     const DateFormatter = ({ value }: any) => value.replace(/(\d{4})-(\d{2})-(\d{2})/, '$3.$2.$1');
 
@@ -88,8 +74,8 @@ export const DataTableUnidad = () => {
     const CurrencyFormatter = ({ value }: any) => {
         return (
             <>
-                <Button sx={{ mr: 1 }} variant="contained" onClick={() => { OpenEditUnidad(value) }}>Editar </Button>
-                <Button variant="outlined" color="error" onClick={() => OpenDeleteUnidad(value)}>
+                <Button sx={{ mr: 1 }} variant="contained" onClick={() => { OpenEditCargo(value) }}>Editar</Button>
+                <Button variant="outlined" color="error" onClick={() => OpenDeleteCargo(value)}>
                     Eliminar
                 </Button>
             </>
@@ -103,27 +89,28 @@ export const DataTableUnidad = () => {
             {...props}
         />
     );
-    function OpenNuevoUnidad() {
+
+    function OpenNuevoCargo() {
         setOpencargo({
             openModal: true,
-            title: "Añadir unidad",
+            title: "Añadir Tipo contrato",
             type: "nuevo",
             id: 0,
             nombreCancelar: "Cancelar",
             nombreAceptar: "Guardar"
         })
     }
-    function OpenEditUnidad(id: number) {
+    function OpenEditCargo(id: number) {
         setOpencargo({
             openModal: true,
-            title: "Editar unidad",
+            title: "Editar Tipo contrato",
             type: "editar",
             id: id,
             nombreCancelar: "Cancelar",
             nombreAceptar: "Modificar"
         })
     }
-    function OpenDeleteUnidad(id: number) {
+    function OpenDeleteCargo(id: number) {
         setOpencargo({
             openModal: true,
             title: "Esta seguro de realizar esta accion",
@@ -133,7 +120,7 @@ export const DataTableUnidad = () => {
             nombreAceptar: "Eliminar"
         })
     }
-    function CloseUnidad() {
+    function CloseCargo() {
         loadData()
         setOpencargo({
             openModal: false,
@@ -144,6 +131,7 @@ export const DataTableUnidad = () => {
             nombreAceptar: ""
         })
     }
+
     useEffect(() => {
         setLoading(true);
         loadData()
@@ -151,11 +139,14 @@ export const DataTableUnidad = () => {
         return () => {
 
         }
-    }, [setOpencargo])
+    }, [])
     return (
         <>
-            <Typography variant='h6' sx={{ mb: 1 }}>Lista Unidad</Typography>
-            <Button sx={{ mb: 2 }} variant="contained" onClick={OpenNuevoUnidad} >Registrar unidad</Button>
+           <CTipografia
+                descripcion='Registre tipo de contratos.'
+                titulo='TIPOS CONTRATO'
+            />
+            <Button sx={{ mb: 2 }} variant="contained" onClick={OpenNuevoCargo} >Añadir</Button>
             <Paper style={{ position: 'relative' }}>
                 <Grid
                     rows={rows}
@@ -177,8 +168,7 @@ export const DataTableUnidad = () => {
                 </Grid>
                 {loading && <Loading />}
             </Paper>
-            <ModalUnidad open={openModal} titulo={title} tipo={type} closeModal={CloseUnidad} id={id} nombreAceptar={nombreAceptar} nombreCancelar={nombreCancelar}></ModalUnidad>
+            <ModalTipoContrato open={openModal} titulo={title} tipo={type} closeModal={CloseCargo} id={id} nombreAceptar={nombreAceptar} nombreCancelar={nombreCancelar}></ModalTipoContrato>
         </>
     )
 }
-

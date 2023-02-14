@@ -9,13 +9,24 @@ import { SelectToken, setToken } from '../Reducers/Slices/LoginSlice';
 import { Authenticacion } from '../Service/ApiRRHH/Authenticacion';
 import { AutenticacionDto } from '../Service/ApiRRHH/Interfaces/Authenticacion';
 import { ListColaboradores } from '../Pages/Colaboradores/ListColaboradores';
+import { Contratos } from '../Pages/Configuracion/Contratos';
+import { FormasPagos } from '../Pages/Configuracion/FormasPagos';
 
 const Login = lazy(() => import('../Pages/Login/login'));
 const Home = lazy(() => import('../Pages/Home/home'));
 const Colaborador = lazy(() => import('../Pages/Colaboradores/colaborador'));
 const Empresa = lazy(() => import('../Pages/Configuracion/Empresa'));
-
-const mdTheme = createTheme();
+const SeguroSalud = lazy(() => import('../Pages/Configuracion/SeguroSalud'));
+const Asistencia=lazy(() => import('../Pages/Asistencia/Asistencia'));
+const mdTheme = createTheme(
+    {
+        typography: {
+            button: {
+                textTransform: 'none'
+            }
+        }
+    }
+);
 
 const initialState: AutenticacionDto = {
     modulos: [],
@@ -72,10 +83,11 @@ export const Navigation = () => {
                             <Route path="/colaborador/crear" element={<Colaborador tipo='nuevo' />}></Route>
                             <Route path="/colaborador/editar/:id" element={<Colaborador tipo='editar' />}></Route>
                             <Route path="/configuracion/empresas" element={<Empresa />}></Route>
-                            <Route path="/configuracion/contratos" element={<Empresa />}></Route>
-                            <Route path="/configuracion/pagos" element={<Empresa />}></Route>
-                            <Route path="/configuracion/seguro" element={<Empresa />}></Route>
+                            <Route path="/configuracion/contratos" element={<Contratos />}></Route>
+                            <Route path="/configuracion/entidades-bancarias" element={<FormasPagos />}></Route>
+                            <Route path="/configuracion/seguro-salud" element={<SeguroSalud />}></Route>
                             <Route path="/configuracion/otros" element={<Empresa />}></Route>
+                            <Route path="/configuracion/asistencia" element={<Asistencia />}></Route>
                         </Route>
                         <Route path='/login' element={
                             <LibresRoute valid={token} redirrecTo={'/inicio'}>

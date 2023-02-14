@@ -13,6 +13,7 @@ import { Loading } from './Components/Loading';
 import { GetColaboradorService } from '../../Service/ApiRRHH/ColaboradoresService';
 import { Button } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { ColaboradorDataTable } from '../../Service/ApiRRHH/Interfaces/ColaboradorDto';
 
 const URL = 'https://js.devexpress.com/Demos/Mvc/api/DataGridWebApi/Orders';
 
@@ -35,7 +36,7 @@ const DataGrid = () => {
         { name: 'oficina', title: 'OFICINA' },
         { name: 'id', title: 'ACCIONES' },
     ]);
-    const [rows, setRows] = useState([]);
+    const [rows, setRows] = useState<ColaboradorDataTable[]>([]);
     const [loading, setLoading] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const [lastQuery, setLastQuery] = useState('');

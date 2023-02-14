@@ -9,11 +9,8 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { Grid, TextField } from '@mui/material';
 
-import { UseDataTableCargo } from './hooks/UseDataTableCargo';
+import { UseDataTableSucursal } from './hooks/UseDataTableSucursal';
 
-interface cargo {
-    nombreUnidad: string
-}
 interface ModalCargoProps {
     closeModal: (event: React.MouseEvent<HTMLElement>) => void
     open: boolean
@@ -23,14 +20,11 @@ interface ModalCargoProps {
     nombreAceptar: string;
     nombreCancelar: string
 }
-const initialState: cargo = {
-    nombreUnidad: ''
-}
-export const ModalCargo = ({ closeModal, open, titulo, tipo, id = 0, nombreAceptar, nombreCancelar }: ModalCargoProps) => {
+export const ModalSucursal = ({ closeModal, open, titulo, tipo, id = 0, nombreAceptar, nombreCancelar }: ModalCargoProps) => {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-    const dataTableCargo = UseDataTableCargo({ closeModal, open, titulo, tipo, id, nombreAceptar, nombreCancelar });
+    const dataTableSucursal = UseDataTableSucursal({ closeModal, open, titulo, tipo, id, nombreAceptar, nombreCancelar });
 
     return (
         <>
@@ -46,18 +40,32 @@ export const ModalCargo = ({ closeModal, open, titulo, tipo, id = 0, nombreAcept
                 <DialogContent>
                     {
                         tipo == 'eliminar' ? (<></>) : (<Grid container spacing={3}>
-                            <Grid item xs={12} sm={12}>
+                            <Grid item xs={12} sm={6}>
                                 <TextField
-                                    name="nombreCargo"
-                                    label="Nombre del cargo"
+                                    name="nombreSucursal"
+                                    label="Nombre Sucursal"
                                     fullWidth
                                     autoComplete="given-name"
                                     variant="standard"
-                                    onBlur={dataTableCargo.handleBlur}
-                                    onChange={dataTableCargo.handleChange}
-                                    helperText={dataTableCargo.errors.nombreCargo}
-                                    error={!!dataTableCargo.errors.nombreCargo}
-                                    value={dataTableCargo.values.nombreCargo}
+                                    onBlur={dataTableSucursal.handleBlur}
+                                    onChange={dataTableSucursal.handleChange}
+                                    helperText={dataTableSucursal.errors.nombreSucursal}
+                                    error={!!dataTableSucursal.errors.nombreSucursal}
+                                    value={dataTableSucursal.values.nombreSucursal}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    name="direccion"
+                                    label="Direccion"
+                                    fullWidth
+                                    autoComplete="given-name"
+                                    variant="standard"
+                                    onBlur={dataTableSucursal.handleBlur}
+                                    onChange={dataTableSucursal.handleChange}
+                                    helperText={dataTableSucursal.errors.direccion}
+                                    error={!!dataTableSucursal.errors.direccion}
+                                    value={dataTableSucursal.values.direccion}
                                 />
                             </Grid>
                         </Grid>)
@@ -67,7 +75,7 @@ export const ModalCargo = ({ closeModal, open, titulo, tipo, id = 0, nombreAcept
                     <Button autoFocus onClick={closeModal}>
                         {nombreCancelar}
                     </Button>
-                    <Button autoFocus onClick={dataTableCargo.onSave}>
+                    <Button autoFocus onClick={dataTableSucursal.onSave}>
                         {nombreAceptar}
                     </Button>
                 </DialogActions>

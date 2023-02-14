@@ -4,11 +4,16 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import TaskIcon from '@mui/icons-material/Task';
 import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
+import BusinessIcon from '@mui/icons-material/Business';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+import PaymentsIcon from '@mui/icons-material/Payments';
+import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
+import BuildIcon from '@mui/icons-material/Build';
 import { Collapse, List, ListItem } from '@mui/material';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -29,6 +34,12 @@ const MainListItems = () => (
                 <PeopleIcon />
             </ListItemIcon>
             <ListItemText primary="Colaboradores" />
+        </ListItemButton>
+        <ListItemButton component={Link} to="/configuracion/asistencia">
+            <ListItemIcon>
+                <BorderColorIcon />
+            </ListItemIcon>
+            <ListItemText primary='Asistencia' />
         </ListItemButton>
         <ListItemButton>
             <ListItemIcon>
@@ -54,11 +65,41 @@ const SecondaryListItems = () => {
     return (
         <>
             <ListSubheader component="div" inset>
-                Otros
+                Configuracion
             </ListSubheader>
-            <ListItemButton onClick={handleClick}>
+            <ListItemButton component={Link} to="/configuracion/contratos">
                 <ListItemIcon>
-                    <AssignmentIcon />
+                    <TaskIcon />
+                </ListItemIcon>
+                <ListItemText primary='Contratos' />
+            </ListItemButton>
+            <ListItemButton component={Link} to="/configuracion/empresas">
+                <ListItemIcon>
+                    <BusinessIcon />
+                </ListItemIcon>
+                <ListItemText primary='Empresa' />
+            </ListItemButton>
+            <ListItemButton component={Link} to="/configuracion/entidades-bancarias">
+                <ListItemIcon>
+                    <PaymentsIcon />
+                </ListItemIcon>
+                <ListItemText primary='Pagos' />
+            </ListItemButton>
+            <ListItemButton component={Link} to="/configuracion/seguro-salud">
+                <ListItemIcon>
+                    <MedicalInformationIcon />
+                </ListItemIcon>
+                <ListItemText primary='Seguros/salud' />
+            </ListItemButton>
+            <ListItemButton component={Link} to="/configuracion/otros">
+                <ListItemIcon>
+                    <BuildIcon />
+                </ListItemIcon>
+                <ListItemText primary='Miselaneos' />
+            </ListItemButton>
+            {/* <ListItemButton onClick={handleClick}>
+                <ListItemIcon>
+                    <BuildIcon />
                 </ListItemIcon>
                 <ListItemText primary="Configuracion" />
                 {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
@@ -71,32 +112,32 @@ const SecondaryListItems = () => {
                         </ListItemIcon>
                         <ListItemText primary='Empresa' />
                     </ListItemButton>
-                    <ListItem >
+                    <ListItemButton component={Link} to="/configuracion/contratos">
                         <ListItemIcon>
 
                         </ListItemIcon>
                         <ListItemText primary='Contratos' />
-                    </ListItem>
-                    <ListItem >
+                    </ListItemButton>
+                    <ListItemButton component={Link} to="/configuracion/entidades-bancarias">
                         <ListItemIcon>
 
                         </ListItemIcon>
-                        <ListItemText primary='Pagos' />
-                    </ListItem>
-                    <ListItem >
+                        <ListItemText primary='Formas de pagos' />
+                    </ListItemButton>
+                    <ListItemButton component={Link} to="/configuracion/seguro-salud">
                         <ListItemIcon>
 
                         </ListItemIcon>
-                        <ListItemText primary='Seguros' />
-                    </ListItem>
-                    <ListItem >
+                        <ListItemText primary='Seguros/salud' />
+                    </ListItemButton>
+                    <ListItemButton component={Link} to="/configuracion/otros">
                         <ListItemIcon>
 
                         </ListItemIcon>
-                        <ListItemText primary='Otros' />
-                    </ListItem>
+                        <ListItemText primary='miselaneos' />
+                    </ListItemButton>
                 </List>
-            </Collapse>
+            </Collapse> */}
         </>
     );
 }

@@ -7,11 +7,11 @@ import { loginDto, responseLoginDto } from './Interfaces/Login';
 AxiosRequest();
 
 export async function LoginAuthenticacion(data: loginDto) {
-    return await axios.post<responseLoginDto>(`${process.env.REACT_APP_API_RRHH}/auth/login`, data);
+    return await axios.post<responseLoginDto>(`${process.env.REACT_APP_API_RRHH}/api/auth/login`, data);
 }
 export async function LogoutAuthenticacion() {
-    return await axios.get<responseAutenticacionDto>(`${process.env.REACT_APP_API_RRHH}/auth/logout`);
+    return await axios.get<responseAutenticacionDto>(`${process.env.REACT_APP_API_RRHH}/api/auth/logout`);
 }
 export async function Authenticacion() {
-    return await axios.get<responseAutenticacionDto>(`${process.env.REACT_APP_API_RRHH}/auth`);
+    return await axios.get<responseAutenticacionDto>(`${process.env.REACT_APP_API_RRHH}/api/auth`);
 }

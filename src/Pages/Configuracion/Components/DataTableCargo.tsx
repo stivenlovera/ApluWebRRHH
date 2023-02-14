@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Paper from '@mui/material/Paper';
 import { DataTypeProvider, SearchState } from '@devexpress/dx-react-grid';
 import {
@@ -10,19 +10,29 @@ import {
 } from '@devexpress/dx-react-grid-material-ui';
 
 
-import { Button } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Button, Typography } from '@mui/material';
 import { Loading } from '../../Colaboradores/Components/Loading';
 import { GetCargoService } from '../../../Service/ApiRRHH/Cargo';
 import { ICargo } from '../../../Service/ApiRRHH/Interfaces/CargoDto';
+import { ModalCargo } from './ModalCargo';
 export const DataTableCargo = () => {
+
+    const [{ openModal, title, type, id, nombreAceptar, nombreCancelar }, setOpencargo] = useState({
+        openModal: false,
+        title: "",
+        type: "",
+        id: 0,
+        nombreAceptar: "",
+        nombreCancelar: ""
+    });
+
     const [tableColumnExtensions] = useState([
         { columnName: 'nombreCargo' },
-        { columnName: 'acciones', width: 250 },
+        { columnName: 'id', width: 250 },
     ]);
     const [columns] = useState([
-        { name: 'nombreCargo', title: 'NOMBRE CARGO' },
-        { name: 'acciones', title: 'ACCIONES' },
+        { name: 'nombreCargo', title: 'CARGO' },
+        { name: 'id', title: 'ACCIONES' },
     ]);
     const [rows, setRows] = useState<ICargo[]>([]);
     const [loading, setLoading] = useState(false);
@@ -47,23 +57,9 @@ export const DataTableCargo = () => {
             const { data } = await GetCargoService();
             setRows(data.data);
             setLoading(false);
-            /*  const queryString = getQueryString();
-             if (queryString !== lastQuery && !loading) {
-                
-                 fetch(queryString)
-                     .then(response => response.json())
-                     .then((orders) => {
-                         setRows(orders.data);
-                         setLoading(false);
-                     })
-                     .catch(() => setLoading(false));
-                 setLastQuery(queryString);
-             } */
         } catch (error) {
             setLoading(false)
         }
-
-
     };
     const DateFormatter = ({ value }: any) => value.replace(/(\d{4})-(\d{2})-(\d{2})/, '$3.$2.$1');
 
@@ -74,24 +70,65 @@ export const DataTableCargo = () => {
         />
     );
     const CurrencyFormatter = ({ value }: any) => {
-        console.log(value);
         return (
             <>
-                <Button sx={{ mr: 1 }} variant="contained" component={Link} to="/colaborador/crear">Editar {value}</Button>
-                <Button variant="outlined" color="error">
+                <Button sx={{ mr: 1 }} variant="contained" onClick={() => { OpenEditCargo(value) }}>Editar</Button>
+                <Button variant="outlined" color="error" onClick={() => OpenDeleteCargo(value)}>
                     Eliminar
                 </Button>
             </>
         )
     };
     const [dateColumns] = useState(['saleDate']);
-    const [currencyColumns] = useState(['acciones']);
+    const [currencyColumns] = useState(['id']);
     const CurrencyTypeProvider = (props: any) => (
         <DataTypeProvider
             formatterComponent={CurrencyFormatter}
             {...props}
         />
     );
+
+    function OpenNuevoCargo() {
+        setOpencargo({
+            openModal: true,
+            title: "Añadir Cargo",
+            type: "nuevo",
+            id: 0,
+            nombreCancelar: "Cancelar",
+            nombreAceptar: "Guardar"
+        })
+    }
+    function OpenEditCargo(id: number) {
+        setOpencargo({
+            openModal: true,
+            title: "Editar Cargo",
+            type: "editar",
+            id: id,
+            nombreCancelar: "Cancelar",
+            nombreAceptar: "Modificar"
+        })
+    }
+    function OpenDeleteCargo(id: number) {
+        setOpencargo({
+            openModal: true,
+            title: "Esta seguro de realizar esta accion",
+            type: "eliminar",
+            id: id,
+            nombreCancelar: "Cancelar",
+            nombreAceptar: "Eliminar"
+        })
+    }
+    function CloseCargo() {
+        loadData()
+        setOpencargo({
+            openModal: false,
+            title: "",
+            type: "",
+            id: 0,
+            nombreCancelar: "",
+            nombreAceptar: ""
+        })
+    }
 
     useEffect(() => {
         setLoading(true);
@@ -102,26 +139,31 @@ export const DataTableCargo = () => {
         }
     }, [])
     return (
-        <Paper style={{ position: 'relative' }}>
-            <Grid
-                rows={rows}
-                columns={columns}
-            >
-                <SearchState
-                    onValueChange={setSearchValue}
-                />
-                <CurrencyTypeProvider
-                    for={currencyColumns}
-                />
-                <DateTypeProvider
-                    for={dateColumns}
-                />
-                <VirtualTable columnExtensions={tableColumnExtensions} />
-                <TableHeaderRow />
-                <Toolbar />
-                <SearchPanel />
-            </Grid>
-            {loading && <Loading />}
-        </Paper>
+        <>
+            <Typography variant='h6' sx={{ mb: 2 }}>Lista Cargos</Typography>
+            <Button sx={{ mb: 2 }} variant="contained" onClick={OpenNuevoCargo} >Registrar cargo</Button>
+            <Paper style={{ position: 'relative' }}>
+                <Grid
+                    rows={rows}
+                    columns={columns}
+                >
+                    <SearchState
+                        onValueChange={setSearchValue}
+                    />
+                    <CurrencyTypeProvider
+                        for={currencyColumns}
+                    />
+                    <DateTypeProvider
+                        for={dateColumns}
+                    />
+                    <VirtualTable columnExtensions={tableColumnExtensions} />
+                    <TableHeaderRow />
+                    <Toolbar />
+                    <SearchPanel />
+                </Grid>
+                {loading && <Loading />}
+            </Paper>
+            <ModalCargo open={openModal} titulo={title} tipo={type} closeModal={CloseCargo} id={id} nombreAceptar={nombreAceptar} nombreCancelar={nombreCancelar}></ModalCargo>
+        </>
     )
 }

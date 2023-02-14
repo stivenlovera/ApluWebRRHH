@@ -1,44 +1,37 @@
 import { Button, Grid, Typography } from '@mui/material'
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import DataGrid from '../Colaboradores/colaboradores'
 import { DataTableCargo } from './Components/DataTableCargo'
+import { DataTableOficina } from './Components/DataTableOficina'
+import { DataTableSucursal } from './Components/DataTableSucursal'
 import { DataTableUnidad } from './Components/DataTableUnidad'
-import { ModalCargo } from './Components/ModalCargo'
 
 const Empresa = () => {
-  const [opencargo, setOpencargo] = useState(false)
-  const handleClose = () => {
-    setOpencargo(false);
-  };
+
+  useEffect(() => {
+
+
+    return () => {
+
+    }
+  }, [])
 
   return (
     <>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
-          <Typography variant='h6' sx={{ mb: 1 }}>Lista Unidad Organizacional</Typography>
-          <Button sx={{ mb: 1 }} variant="contained" onClick={() => {
-            setOpencargo(true)
-          }} >Registrar unidad</Button>
           <DataTableUnidad />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Typography variant='h6' sx={{ mb: 1 }}>Lista Cargo</Typography>
-          <Button sx={{ mb: 1 }} variant="contained" component={Link} to="/colaborador/crear" >Registrar Cargo</Button>
           <DataTableCargo />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Typography variant='h6' sx={{ mb: 1 }}>Lista Sucursal</Typography>
-          <Button sx={{ mb: 1 }} variant="contained" component={Link} to="/colaborador/crear" >Registrar Sucursal</Button>
-          <DataGrid />
+          <DataTableSucursal />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Typography variant='h6' sx={{ mb: 1 }}>Lista Oficina</Typography>
-          <Button sx={{ mb: 1 }} variant="contained" component={Link} to="/colaborador/crear" >Registrar Oficina</Button>
-          <DataGrid />
+          <DataTableOficina />
         </Grid>
       </Grid>
-      <ModalCargo openModal={opencargo}></ModalCargo>
     </>
   )
 }

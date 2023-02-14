@@ -25,10 +25,10 @@ import { IUnidad } from '../../Service/ApiRRHH/Interfaces/UnidadDto';
 import { ISucursal } from '../../Service/ApiRRHH/Interfaces/SucursalDto';
 import { ICargo } from '../../Service/ApiRRHH/Interfaces/CargoDto';
 import { ClasificacionLaboral } from '../../Service/ApiRRHH/Interfaces/ClasificacionLaboralDto';
-import { ModalidadContrato } from '../../Service/ApiRRHH/Interfaces/ModalidadContrato';
+import { IModalidadContrato } from '../../Service/ApiRRHH/Interfaces/ModalidadContrato';
 import { CentroCosto } from '../../Service/ApiRRHH/Interfaces/CentroCosto';
 import { InformacionContable } from '../../Service/ApiRRHH/Interfaces/InformacionContable';
-import { TipoContrato } from '../../Service/ApiRRHH/Interfaces/TipoContratoDto';
+import { ITipoContrato } from '../../Service/ApiRRHH/Interfaces/TipoContratoDto';
 import { FormacionPrincipal } from '../../Service/ApiRRHH/Interfaces/FomacionPrincipal';
 import { TipoCuenta } from '../../Service/ApiRRHH/Interfaces/TipoCuenta';
 import { CajaSalud } from '../../Service/ApiRRHH/Interfaces/CajaSaludDto';
@@ -265,10 +265,10 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
     const [sucursal, setSucursal] = useState<ISucursal[]>([]);
     const [cargo, setCargo] = useState<ICargo[]>([]);
     const [clasificacionlaboral, setClasificacionlaboral] = useState<ClasificacionLaboral[]>([]);
-    const [modalidadContrato, setModalidadContrato] = useState<ModalidadContrato[]>([]);
+    const [modalidadContrato, setModalidadContrato] = useState<IModalidadContrato[]>([]);
     const [informacionContable, setInformacionContable] = useState<InformacionContable[]>([]);
     const [centroCosto, setCentroCosto] = useState<CentroCosto[]>([]);
-    const [tipoContrato, setTipoContrato] = useState<TipoContrato[]>([]);
+    const [tipoContrato, setTipoContrato] = useState<ITipoContrato[]>([]);
     const [formacionPrincial, setFormacionPrincial] = useState<FormacionPrincipal[]>([]);
     const [tipoCuenta, settipoCuenta] = useState<TipoCuenta[]>([]);
     const [banco, setBanco] = useState<Banco[]>([]);
@@ -600,7 +600,7 @@ const Colaborador = ({ tipo }: ColaboradorProps) => {
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={4}>
-                                <FormControl variant="standard" fullWidth>
+                                    <FormControl variant="standard" fullWidth>
                                         <InputLabel id="demo-simple-select-standard-label">Genero</InputLabel>
                                         <Select
                                             labelId="demo-simple-select-standard-label"

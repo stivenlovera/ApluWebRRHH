@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Paper from '@mui/material/Paper';
 import { DataTypeProvider, SearchState } from '@devexpress/dx-react-grid';
 import {
@@ -11,15 +11,13 @@ import {
 
 
 import { Button, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
-import { Loading } from '../../Colaboradores/Components/Loading';
-import { GetCargoService } from '../../../Service/ApiRRHH/Cargo';
-import { ICargo } from '../../../Service/ApiRRHH/Interfaces/CargoDto';
-import { GetUnidadService } from '../../../Service/ApiRRHH/Unidad';
-import { IUnidad } from '../../../Service/ApiRRHH/Interfaces/UnidadDto';
-import { ModalUnidad } from './ModalUnidad';
+import { Loading } from '../../../Colaboradores/Components/Loading';
+import { GetColaboradorService } from '../../../../Service/ApiRRHH/ColaboradoresService';
+import { ColaboradorDataTable } from '../../../../Service/ApiRRHH/Interfaces/ColaboradorDto';
+import { ModalContrato } from './ModalContrato';
+import { CTipografia } from '../../../../Components/Labels/CTipografia';
+export const DataTableContrato = () => {
 
-export const DataTableUnidad = () => {
     const [{ openModal, title, type, id, nombreAceptar, nombreCancelar }, setOpencargo] = useState({
         openModal: false,
         title: "",
@@ -27,16 +25,23 @@ export const DataTableUnidad = () => {
         id: 0,
         nombreAceptar: "",
         nombreCancelar: ""
-    })
+    });
+   
     const [tableColumnExtensions] = useState([
-        { columnName: 'nombreUnidad' },
-        { columnName: 'acciones', width: 250 },
+        { columnName: 'id', width: 200 },
+        { columnName: 'nombreCompleto', width: 250 },
     ]);
     const [columns] = useState([
-        { name: 'nombreUnidad', title: 'UNIDAD' },
+        { name: 'ci', title: 'CI' },
+        { name: 'codColaborador', title: 'CODIGO' },
+        { name: 'nombreCompleto', title: 'NOMBRE COMPLETO' },
+        { name: 'tipoContrato', title: 'TIPO CONTRATO' },
+        { name: 'modoContrato', title: 'MODALIDAD CONTRATO' },
+        { name: 'cargo', title: 'CARGO' },
+        { name: 'sucursal', title: 'SUCURSAL' },
         { name: 'id', title: 'ACCIONES' },
     ]);
-    const [rows, setRows] = useState<IUnidad[]>([]);
+    const [rows, setRows] = useState<ColaboradorDataTable[]>([]);
     const [loading, setLoading] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const [lastQuery, setLastQuery] = useState('');
@@ -56,26 +61,13 @@ export const DataTableUnidad = () => {
 
     const loadData = async () => {
         try {
-            const { data } = await GetUnidadService();
+            const { data } = await GetColaboradorService();
             setRows(data.data);
+            console.log(data.data)
             setLoading(false);
-            /*  const queryString = getQueryString();
-             if (queryString !== lastQuery && !loading) {
-                
-                 fetch(queryString)
-                     .then(response => response.json())
-                     .then((orders) => {
-                         setRows(orders.data);
-                         setLoading(false);
-                     })
-                     .catch(() => setLoading(false));
-                 setLastQuery(queryString);
-             } */
         } catch (error) {
             setLoading(false)
         }
-
-
     };
     const DateFormatter = ({ value }: any) => value.replace(/(\d{4})-(\d{2})-(\d{2})/, '$3.$2.$1');
 
@@ -88,10 +80,7 @@ export const DataTableUnidad = () => {
     const CurrencyFormatter = ({ value }: any) => {
         return (
             <>
-                <Button sx={{ mr: 1 }} variant="contained" onClick={() => { OpenEditUnidad(value) }}>Editar </Button>
-                <Button variant="outlined" color="error" onClick={() => OpenDeleteUnidad(value)}>
-                    Eliminar
-                </Button>
+                <Button sx={{ mr: 1 }} variant="contained" onClick={() => { OpenEditCargo(value) }}>Ver informacion</Button>
             </>
         )
     };
@@ -103,27 +92,28 @@ export const DataTableUnidad = () => {
             {...props}
         />
     );
-    function OpenNuevoUnidad() {
+
+    function OpenNuevoCargo() {
         setOpencargo({
             openModal: true,
-            title: "Añadir unidad",
+            title: "Informacion de contrato",
             type: "nuevo",
             id: 0,
             nombreCancelar: "Cancelar",
             nombreAceptar: "Guardar"
         })
     }
-    function OpenEditUnidad(id: number) {
+    function OpenEditCargo(id: number) {
         setOpencargo({
             openModal: true,
-            title: "Editar unidad",
+            title: "Informacion de contrato",
             type: "editar",
             id: id,
             nombreCancelar: "Cancelar",
             nombreAceptar: "Modificar"
         })
     }
-    function OpenDeleteUnidad(id: number) {
+    function OpenDeleteCargo(id: number) {
         setOpencargo({
             openModal: true,
             title: "Esta seguro de realizar esta accion",
@@ -133,7 +123,7 @@ export const DataTableUnidad = () => {
             nombreAceptar: "Eliminar"
         })
     }
-    function CloseUnidad() {
+    function CloseCargo() {
         loadData()
         setOpencargo({
             openModal: false,
@@ -144,6 +134,7 @@ export const DataTableUnidad = () => {
             nombreAceptar: ""
         })
     }
+
     useEffect(() => {
         setLoading(true);
         loadData()
@@ -151,11 +142,13 @@ export const DataTableUnidad = () => {
         return () => {
 
         }
-    }, [setOpencargo])
+    }, [])
     return (
         <>
-            <Typography variant='h6' sx={{ mb: 1 }}>Lista Unidad</Typography>
-            <Button sx={{ mb: 2 }} variant="contained" onClick={OpenNuevoUnidad} >Registrar unidad</Button>
+            <CTipografia
+                titulo='Lista Contratos'
+                descripcion='Presione el boton ver informacion para editar informacion o generar contrato.'
+            />
             <Paper style={{ position: 'relative' }}>
                 <Grid
                     rows={rows}
@@ -177,8 +170,7 @@ export const DataTableUnidad = () => {
                 </Grid>
                 {loading && <Loading />}
             </Paper>
-            <ModalUnidad open={openModal} titulo={title} tipo={type} closeModal={CloseUnidad} id={id} nombreAceptar={nombreAceptar} nombreCancelar={nombreCancelar}></ModalUnidad>
+            <ModalContrato open={openModal} titulo={title} tipo={type} closeModal={CloseCargo} id={id} nombreAceptar={nombreAceptar} nombreCancelar={nombreCancelar}></ModalContrato>
         </>
     )
 }
-

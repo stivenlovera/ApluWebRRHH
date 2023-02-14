@@ -7,3 +7,29 @@ export interface ResponseUnidad {
     message: string,
     data: IUnidad[]
 }
+
+export interface ResponseCreateUnidad{
+    status: number,
+    message: string,
+    data: any
+}
+export interface ResponseStoreUnidad{
+    status: number,
+    message: string,
+    data:any
+}
+export interface ResponseEditUnidad{
+    status: number,
+    message: string,
+    data:IUnidad
+}
+export interface ResponseUpdateUnidad{
+    status: number,
+    message: string,
+    data:any
+}
+export interface ResponseDeleteUnidad{
+    status: number;
+    message: string;
+    data:any
+}
