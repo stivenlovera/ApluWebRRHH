@@ -79,7 +79,7 @@ export const DataTableAsistencia = () => {
     const CurrencyFormatter = ({ value }: any) => {
         return (
             <>
-                <Button sx={{ mr: 1 }} variant="contained" onClick={() => { OpenEditCargo(value) }}>Modificar Asistencia</Button>
+                <Button sx={{ mr: 1 }} variant="contained" onClick={() => { OpenEditCargo(value) }}>Marcar asistencia</Button>
             </>
         )
     };

@@ -7,6 +7,7 @@ import {
     SearchPanel,
     VirtualTable,
     TableHeaderRow,
+    TableFixedColumns,
 } from '@devexpress/dx-react-grid-material-ui';
 
 import { Loading } from './Components/Loading';
@@ -61,7 +62,6 @@ const DataGrid = () => {
             setLoading(false);
             /*  const queryString = getQueryString();
              if (queryString !== lastQuery && !loading) {
-                
                  fetch(queryString)
                      .then(response => response.json())
                      .then((orders) => {
@@ -131,6 +131,9 @@ const DataGrid = () => {
                 />
                 <VirtualTable columnExtensions={tableColumnExtensions} />
                 <TableHeaderRow />
+                <TableFixedColumns
+                  
+                />
                 <Toolbar />
                 <SearchPanel />
             </Grid>

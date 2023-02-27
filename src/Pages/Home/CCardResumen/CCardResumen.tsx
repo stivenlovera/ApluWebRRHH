@@ -2,18 +2,18 @@ import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
 import GroupsIcon from '@mui/icons-material/Groups';
 type JSXComponent = () => JSX.Element;
 interface CCardResumenProps {
-    color:string,
-    monto:string
-    descripcion:string;
-    icon:React.ReactNode;
+    color: string,
+    monto: string
+    descripcion: string;
+    icon: React.ReactNode;
 }
 
-const CCardResumen = ({color,descripcion,monto,icon}:CCardResumenProps) => {
+const CCardResumen = ({ color, descripcion, monto, icon }: CCardResumenProps) => {
     return (
         <Grid container item sm={3} sx={{ p: 1 }}>
             <Grid container item lg={12} style={{ marginBottom: 0 }} >
-                <Card sx={{ minWidth: '100%' }} style={{ background: color }}  onMouseEnter={() => console.log("efecto hover")}>
-                    <CardContent sx={{ display: 'flex' }} style={{ padding: 0 }}>
+                <Card sx={{ minWidth: '100%' }} style={{ background: color }} onMouseEnter={() => console.log("efecto hover")}>
+                    <CardContent sx={{ display: 'flex' }} style={{ padding: 1 }}>
                         {icon}
                         <Box style={{ width: '100%' }}>
                             <CardContent>

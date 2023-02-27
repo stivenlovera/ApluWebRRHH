@@ -45,21 +45,21 @@ export interface Colaborador {
     departamento: Departamento[];
     pais: Pais[];
     estadoCivil: EstadoCivil[];
-    unidad: IUnidad[]
-    sucursal: ISucursal[]
-    cargo: ICargo[]
-    clasificacionlaboral: ClasificacionLaboral[],
-    modalidadContrato: IModalidadContrato[]
-    tipoContrato: ITipoContrato[]
-    informacionContable: InformacionContable[],
-    centroCosto: CentroCosto[]
-    formaPago: FormaPago[]
-    tipoCuenta: TipoCuenta[]
-    banco: Banco[],
-    administracionPensiones: AdministracionPesiones[],
-    cajaSalud: CajaSalud[]
-    formacionPrincial: FormacionPrincipal[]
-    sexo: Sexo[]
+    unidad: IUnidad[];
+    sucursal: ISucursal[];
+    cargo: ICargo[];
+    clasificacionlaboral: ClasificacionLaboral[];
+    modalidadContrato: IModalidadContrato[];
+    tipoContrato: ITipoContrato[];
+    informacionContable: InformacionContable[];
+    centroCosto: CentroCosto[];
+    formaPago: FormaPago[];
+    tipoCuenta: TipoCuenta[];
+    banco: Banco[];
+    administracionPensiones: AdministracionPesiones[];
+    cajaSalud: CajaSalud[];
+    formacionPrincial: FormacionPrincipal[];
+    sexo: Sexo[];
 }
 export interface CreateColaborador {
     ci: string;
@@ -196,4 +196,106 @@ export interface ResponseStoreColaborador {
     status: number,
     message: string,
     data: Colaborador
+}
+
+export interface IColaborador {
+    ci: string,
+    nombre1: string,
+    nombre2: string,
+    nombre3: string,
+    apellidoPaterno: string,
+    apellidoMaterno: string,
+    apellidoCasado: string,
+    fechaNacimiento: Date,
+    vencimientoDocumento: Date,
+    vencimientoLicConducir: Date,
+    lugarNacimiento: string;
+    licenciaConducir: string;
+    telefonoFijo: string;
+    Celular: string;
+    telefonoFijoTrabajo: string;
+    ContactoEmegencia: string;
+    TelefonoEmergencia: string;
+    TipoSangre: string;
+    FactorSangre: string;
+    Dirrecion: string;
+    Email: string;
+    tipoDocumento: number;
+    nacionalidad: number;
+    departamento: number;
+    estadoCivil: number;
+    conyugeNombreCompleto: string;
+    conyugeLugarNacimiento: string;
+    conyugeFechaNacimiento: Date,
+    codigoColaborador: string;
+    fechaIngreso: Date;
+    fechaIngresoVacaciones: Date;
+    fechaIngresoVacacionesAnt: Date;
+    fechaIngresoBonoAntiguedad: Date;
+    viviendaPropia: number;
+    vehiculoPropio: number;
+    oficina: string;
+    ModohaberBasico: number;
+    haberBasico: string;
+    ModoQuincena: number;
+    HaberQuincena: string;
+    telefonoLaboral: string;
+    celularLaboral: string;
+    dirrecionLaboral: string;
+    emailLaboral: string;
+    motivoContrato: string;
+    fechaFinalizacion: Date;
+    fechaRatificacion: Date;
+    excliblePlanilla: number;
+    aguinaldoMes1: number;
+    aplica2aguinaldo: number;
+    aplicaRetroactivos: number;
+    aplicaPrima: number;
+    enviarBoletaPago: number;
+    indemnizacionQuinquenios: number;
+    indemnizacion: number;
+    porcentajeCentroCosto: number;
+    cuentaBancaria: string;
+    aplicaAFP: number;
+    nroAFP: string;
+    jubilado: number;
+    aportaAFP: number;
+    aplicaCajaSalud: number;
+    nroAsegurado: string;
+    discapacidad: number;
+    requiereApruebeVacaciones: number;
+    valorLunes: number;
+    valorMartes: number;
+    valorMiercoles: number;
+    valorJueves: number;
+    valorViernes: number;
+    valorSabado: number;
+    valorDomingo: number;
+    codigoAsistencia: string;
+    diasporMes: number;
+    controlarAsistencia: number;
+    bonoExtra: number;
+    bonoExtraNocturna: number;
+    horasParaHorasExtras: number;
+    horasPorDia: number;
+    descuentoPorFalta: number;
+    descuentoPorAtraso: number;
+    dominicales: number;
+    trabajaDomingo: number;
+    HorasPlanillas: number;
+    unidadId: string;
+    sucursalId: string;
+    cargoId: string;
+    clasificacionlaboralId: string;
+    modalidadContratoId: string;
+    tipoContratoId: string;
+    informacionContableId: string;
+    centroCostoId: string;
+    formaPagoId: string;
+    tipoCuentaId: string;
+    bancoId: string;
+    administracionPensionesId: string;
+    cajaSaludId: string;
+    formacionPrincialId: string;
+    sexoId: string;
 }

@@ -66,7 +66,8 @@ export const DataTableContrato = () => {
             console.log(data.data)
             setLoading(false);
         } catch (error) {
-            setLoading(false)
+            setLoading(false);
+            console.log('respuesta 401');
         }
     };
     const DateFormatter = ({ value }: any) => value.replace(/(\d{4})-(\d{2})-(\d{2})/, '$3.$2.$1');

@@ -37,7 +37,7 @@ const LoadCard = () => {
     );
 };
 
-const ListCCard = (props: ListCCardProps) => {
+const  ListCCard = (props: ListCCardProps) => {
     const [tarjetas, setTarjetas] = useState(initialState);
     const [carga, setCarga] = useState(true);
     const tarjeras=[
