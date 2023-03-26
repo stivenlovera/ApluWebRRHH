@@ -1,5 +1,5 @@
 import { ThemeProvider } from "@emotion/react";
-import { Alert, Avatar, Box, Button, Checkbox, Container, createTheme, CssBaseline, FormControlLabel, Grid, Link, TextField, Typography } from "@mui/material";
+import { Alert, Avatar, Box, Button, Card, CardContent, Checkbox, Container, createTheme, CssBaseline, FormControlLabel, Grid, Link, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useFormik } from 'formik';
@@ -16,8 +16,8 @@ interface loginProps {
 }
 interface AuthenticationProps {
     token: string;
-    user:string;
-    empresa:string;
+    user: string;
+    empresa: string;
     expiration: string;
 }
 interface responseProps {
@@ -84,66 +84,78 @@ const Login = () => {
     return (
         <>
             <ThemeProvider theme={theme}>
-                <Container component="main" maxWidth="xs">
-                    <CssBaseline />
-                    <Alert onClose={() => { }}>Sistema en desarrollo</Alert>
-                    <Box
-                        sx={{
-                            marginTop: 8,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                            <LockOutlinedIcon />
-                        </Avatar>
-                        <Typography component="h1" variant="h5">
-                            Sign in
-                        </Typography>
-                        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-                            <TextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                id="email"
-                                label="Email Address"
-                                name="usuario"
-                                autoComplete="off"
-                                autoFocus
-                                value={values.usuario}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                helperText={errors.usuario}
-                            />
-                            <TextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                value={values.password}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                autoComplete="current-password"
-                                helperText={errors.password}
-                            />
-                            <FormControlLabel
-                                control={<Checkbox value="remember" color="primary" />}
-                                label="Remember me"
-                            />
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
-                            >
-                                Sign In
-                            </Button>
-                            <Grid container>
-                                {/*  <Grid item xs>
+                <div style={{
+                    backgroundImage: `url(${process.env.REACT_APP_API_RRHH}/assest/web/fondoLogin.jpg)`,
+                    backgroundSize: 'cover',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
+                    width: '100vw',
+                    minHeight: '100vh',
+                }}>
+                    <Container component="main" maxWidth="xs">
+                        <CssBaseline />
+                        <br />
+                        <br />
+                        <Card>
+                            <CardContent >
+                                <Box
+                                    sx={{
+                                        marginTop: 1,
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                    }}
+                                >
+
+                                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                                        <LockOutlinedIcon />
+                                    </Avatar>
+                                    <Typography component="h1" variant="h5">
+                                        Sign in
+                                    </Typography>
+                                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                                        <TextField
+                                            margin="normal"
+                                            required
+                                            fullWidth
+                                            id="email"
+                                            label="Email Address"
+                                            name="usuario"
+                                            autoComplete="off"
+                                            autoFocus
+                                            value={values.usuario}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            helperText={errors.usuario}
+                                        />
+                                        <TextField
+                                            margin="normal"
+                                            required
+                                            fullWidth
+                                            name="password"
+                                            label="Password"
+                                            type="password"
+                                            id="password"
+                                            value={values.password}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            autoComplete="current-password"
+                                            helperText={errors.password}
+                                        />
+                                        <FormControlLabel
+                                            control={<Checkbox value="remember" color="primary" />}
+                                            label="Remember me"
+                                        />
+                                        <Button
+                                            type="submit"
+                                            fullWidth
+                                            variant="contained"
+                                            sx={{ mt: 3, mb: 2 }}
+                                        >
+                                            Sign In
+                                        </Button>
+                                        <Grid container>
+                                            {/*  <Grid item xs>
                                     <Link href="#" variant="body2">
                                         Forgot password?
                                     </Link>
@@ -153,10 +165,14 @@ const Login = () => {
                                         {"Don't have an account? Sign Up"}
                                     </Link>
                                 </Grid> */}
-                            </Grid>
-                        </Box>
-                    </Box>
-                </Container>
+                                        </Grid>
+                                    </Box>
+
+                                </Box>
+                            </CardContent>
+                        </Card>
+                    </Container>
+                </div>
             </ThemeProvider>
         </>
     );
