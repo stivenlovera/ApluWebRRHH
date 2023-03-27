@@ -8,6 +8,7 @@ import Axios from 'axios';
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setToken } from "../../Reducers/Slices/LoginSlice";
+import { BButon } from "../../Components/BButon/BButon";
 
 
 interface loginProps {
@@ -26,13 +27,13 @@ interface responseProps {
     data: AuthenticationProps
 }
 
-
 interface MessageError {
     message: string;
     show: boolean;
 }
 const initialMessageError: MessageError = { message: "", show: false };
 const Login = () => {
+    const [habilitar, setHabilitar] = useState(false)
     const theme = createTheme();
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
@@ -53,6 +54,7 @@ const Login = () => {
         },
         onSubmit: async (value) => {
             try {
+                setHabilitar(true);
                 const { data } = await Axios.post<responseProps>(
                     `${process.env.REACT_APP_API_RRHH}/api/auth/login`,
                     value,
@@ -60,15 +62,18 @@ const Login = () => {
                 if (data.status == 1) {
                     updateToken(data.data.token);
                     navigate('/bienvenido')
+                    setHabilitar(false);
                 }
                 else {
                     setErrors({
                         usuario: 'Credenciales no validas',
                         password: 'Credenciales no validas'
-                    })
+                    });
+                    setHabilitar(false);
                 }
             } catch (error) {
                 console.log(error)
+                setHabilitar(false);
             }
         },
         validationSchema: Yup.object({
@@ -146,14 +151,7 @@ const Login = () => {
                                             control={<Checkbox value="remember" color="primary" />}
                                             label="Remember me"
                                         />
-                                        <Button
-                                            type="submit"
-                                            fullWidth
-                                            variant="contained"
-                                            sx={{ mt: 3, mb: 2 }}
-                                        >
-                                            Sign In
-                                        </Button>
+                                        <BButon nombre="Ingresar" onClick={()=>{}} habilitar={habilitar} />
                                         <Grid container>
                                             {/*  <Grid item xs>
                                     <Link href="#" variant="body2">

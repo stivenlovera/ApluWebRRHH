@@ -11,6 +11,9 @@ import { AutenticacionDto } from '../Service/ApiRRHH/Interfaces/Authenticacion';
 import { ListColaboradores } from '../Pages/Colaboradores/ListColaboradores';
 import { Contratos } from '../Pages/Configuracion/Contratos';
 import { FormasPagos } from '../Pages/Configuracion/FormasPagos';
+import type {} from '@mui/lab/themeAugmentation';
+// When using TypeScript 3.x and below
+import '@mui/lab/themeAugmentation';
 
 const Login = lazy(() => import('../Pages/Login/login'));
 const Home = lazy(() => import('../Pages/Home/home'));
@@ -20,11 +23,15 @@ const SeguroSalud = lazy(() => import('../Pages/Configuracion/SeguroSalud'));
 const Asistencia=lazy(() => import('../Pages/Asistencia/Asistencia'));
 const mdTheme = createTheme(
     {
-        typography: {
-            button: {
-                textTransform: 'none'
-            }
-        }
+        components: {
+            MuiTimeline: {
+              styleOverrides: {
+                root: {
+                  backgroundColor: 'red',
+                },
+              },
+            },
+          },
     }
 );
 
